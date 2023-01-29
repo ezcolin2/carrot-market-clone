@@ -1,8 +1,13 @@
 package com.example.auth3.service;
 
 import com.example.auth3.dto.User;
+import com.example.auth3.exception.DuplicatedUserIdException;
+import com.example.auth3.exception.UserIdNotFoundException;
+import com.example.auth3.exception.WrongUserPasswordException;
 import com.example.auth3.repository.UserRepository;
+import com.example.auth3.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -15,10 +20,14 @@ import java.util.Optional;
 public class UserService {
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder encoder;
+    @Value("${jwt.secretKey}")
+    private String secretKey;
+    @Value("${jwt.expiredMs}")
+    private Long expiredMs;
 
     public String join(String userId, String userPwd) {
         if (userRepository.findByUserId(userId).isPresent()){
-            return "아이디가 존재합니다.";
+            throw new DuplicatedUserIdException();
         }
         User newUser = new User();
         newUser.setUserId(userId);
@@ -30,13 +39,13 @@ public class UserService {
     public String login(String userId, String userPwd) {
         Optional<User> user = userRepository.findByUserId(userId);
         if (user.isEmpty()) {
-            return "해당 유저를 찾지못했습니다.";
+            throw new UserIdNotFoundException();
         }
         if (encoder.matches(userPwd, user.get().getUserPwd())) {
             System.out.println(user.get().getUserPwd());
-            return "로그인 성공!";
+            return JwtUtil.createJwt(secretKey, expiredMs);
         }
-        return "비밀번호가 일치하지 않습니다";
+        throw new WrongUserPasswordException();
 
     }
 

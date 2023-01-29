@@ -29,12 +29,12 @@ public class UserController {
 
     @PostMapping("/login")
     public ResponseEntity<LoginAndJoinResponse> login(@RequestBody UserJoinDto user) {
-        String message = userService.login(user.getUserId(), user.getUserPwd());
+        String token = userService.login(user.getUserId(), user.getUserPwd());
         LoginAndJoinResponse response = LoginAndJoinResponse.builder()
                 .code(HttpStatus.OK.value())
-                .message(message)
+                .message("로그인 성공")
                 .httpStatus(HttpStatus.OK)
-                .data(new TokenResponse("lkahsglaskdhg")).build();
+                .data(new TokenResponse(token)).build();
         return new ResponseEntity<LoginAndJoinResponse>(response, response.getHttpStatus());
 
     }
