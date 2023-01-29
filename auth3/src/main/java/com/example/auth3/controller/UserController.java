@@ -1,14 +1,14 @@
 package com.example.auth3.controller;
 
+import com.example.auth3.dto.TokenResponse;
 import com.example.auth3.dto.UserJoinDto;
+import com.example.auth3.response.LoginAndJoinResponse;
 import com.example.auth3.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.apache.el.parser.Token;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/users")
@@ -17,15 +17,25 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("/join")
-    public ResponseEntity<String> join(@RequestBody UserJoinDto user) {
-        String response = userService.join(user.getUserId(), user.getUserPwd());
-        return ResponseEntity.ok(response);
+    public ResponseEntity<LoginAndJoinResponse> join(@RequestBody UserJoinDto user) {
+        String message = userService.join(user.getUserId(), user.getUserPwd());
+        LoginAndJoinResponse res = LoginAndJoinResponse.builder()
+                .code(HttpStatus.OK.value())
+                .message(message)
+                .httpStatus(HttpStatus.OK)
+                .data(null).build();
+        return new ResponseEntity<>(res, res.getHttpStatus());
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody UserJoinDto user) {
-        String response = userService.login(user.getUserId(), user.getUserPwd());
-        return ResponseEntity.ok(response);
+    public ResponseEntity<LoginAndJoinResponse> login(@RequestBody UserJoinDto user) {
+        String message = userService.login(user.getUserId(), user.getUserPwd());
+        LoginAndJoinResponse response = LoginAndJoinResponse.builder()
+                .code(HttpStatus.OK.value())
+                .message(message)
+                .httpStatus(HttpStatus.OK)
+                .data(new TokenResponse("lkahsglaskdhg")).build();
+        return new ResponseEntity<LoginAndJoinResponse>(response, response.getHttpStatus());
 
     }
 }
