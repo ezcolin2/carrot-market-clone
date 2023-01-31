@@ -1,12 +1,11 @@
 package com.example.auth3.repository;
 
-import com.example.auth3.dto.User;
+import com.example.auth3.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Repository;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 

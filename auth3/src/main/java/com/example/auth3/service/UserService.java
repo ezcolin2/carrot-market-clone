@@ -1,6 +1,6 @@
 package com.example.auth3.service;
 
-import com.example.auth3.dto.User;
+import com.example.auth3.entity.User;
 import com.example.auth3.exception.DuplicatedUserIdException;
 import com.example.auth3.exception.UserIdNotFoundException;
 import com.example.auth3.exception.WrongUserPasswordException;
@@ -8,8 +8,6 @@ import com.example.auth3.repository.UserRepository;
 import com.example.auth3.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 

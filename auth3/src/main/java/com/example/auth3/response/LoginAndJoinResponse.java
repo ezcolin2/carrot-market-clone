@@ -10,7 +10,7 @@ import org.springframework.http.HttpStatus;
 @AllArgsConstructor
 @Getter
 public class LoginAndJoinResponse {
-    private Integer code;
+    private int code;
     private HttpStatus httpStatus;
     private String message;
     private Object data;

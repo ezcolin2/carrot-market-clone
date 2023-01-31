@@ -19,6 +19,7 @@ public class UserController {
     @PostMapping("/join")
     public ResponseEntity<LoginAndJoinResponse> join(@RequestBody UserJoinDto user) {
         String message = userService.join(user.getUserId(), user.getUserPwd());
+
         LoginAndJoinResponse res = LoginAndJoinResponse.builder()
                 .code(HttpStatus.OK.value())
                 .message(message)
