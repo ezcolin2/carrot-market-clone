@@ -2,7 +2,7 @@ package com.example.auth3.service;
 
 import com.example.auth3.entity.User;
 import com.example.auth3.exception.DuplicatedUserIdException;
-import com.example.auth3.exception.UserIdNotFoundException;
+import com.example.auth3.exception.DataNotFoundException;
 import com.example.auth3.exception.WrongUserPasswordException;
 import com.example.auth3.repository.UserRepository;
 import com.example.auth3.util.JwtUtil;
@@ -37,7 +37,7 @@ public class UserService {
     public String login(String userId, String userPwd) {
         Optional<User> user = userRepository.findByUserId(userId);
         if (user.isEmpty()) {
-            throw new UserIdNotFoundException();
+            throw new DataNotFoundException("해당 유저가");
         }
         if (encoder.matches(userPwd, user.get().getUserPwd())) {
             System.out.println(user.get().getUserPwd());

@@ -26,12 +26,14 @@ public class CustomExceptionManager {
         return new ResponseEntity<>(res, res.getHttpStatus());
     }
 
-    @ExceptionHandler(UserIdNotFoundException.class)
-    public ResponseEntity<LoginAndJoinResponse> userIdNotFoundException(UserIdNotFoundException e) {
+    @ExceptionHandler(DataNotFoundException.class)
+    public ResponseEntity<LoginAndJoinResponse> userIdNotFoundException(DataNotFoundException e) {
         LoginAndJoinResponse res = LoginAndJoinResponse.builder()
                 .code(HttpStatus.NOT_FOUND.value())
                 .httpStatus(HttpStatus.NOT_FOUND)
                 .message(e.getMessage()).build();
-        return new ResponseEntity<>(res, res.getHttpStatus());
+        return new ResponseEntity<>(res, HttpStatus.OK);
+        //404에러를 200으로 반환하는 이유
+        //클라우드 타입에 서버를 배포했는데 404 에러를 반환하면 원인 모를 오류가 나서
     }
 }
