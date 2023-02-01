@@ -11,6 +11,10 @@ import java.util.Optional;
 public class MemoryPostRepository implements PostRepository{
     private static Map<Long, Post> posts = new HashMap<>();
     private static Long sequence = 0L;
+
+    public void clearPosts() {
+        posts = new HashMap<>();
+    }
     @Override
     public Post save(Post post) {
         post.setId(++sequence);

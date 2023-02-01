@@ -36,4 +36,13 @@ public class CustomExceptionManager {
         //404에러를 200으로 반환하는 이유
         //클라우드 타입에 서버를 배포했는데 404 에러를 반환하면 원인 모를 오류가 나서
     }
+
+    @ExceptionHandler(ImageUploadException.class)
+    public ResponseEntity<LoginAndJoinResponse> imageUploadException(ImageUploadException e) {
+        LoginAndJoinResponse res = LoginAndJoinResponse.builder()
+                .code(HttpStatus.BAD_REQUEST.value())
+                .httpStatus(HttpStatus.BAD_REQUEST)
+                .message(e.getMessage()).build();
+        return new ResponseEntity<>(res, res.getHttpStatus());
+    }
 }

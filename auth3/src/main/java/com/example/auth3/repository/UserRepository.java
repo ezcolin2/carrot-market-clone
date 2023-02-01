@@ -7,4 +7,5 @@ import java.util.Optional;
 public interface UserRepository {
     public User save(User user);
     public Optional<User> findByUserId(String userId);
+    public void clearUsers();
 }

@@ -5,7 +5,7 @@ import lombok.*;
 @AllArgsConstructor
 @Getter
 @Setter
-public class Post {
+public class PostDto {
     private Long id;
     private String postTitle;
     private String writerId;

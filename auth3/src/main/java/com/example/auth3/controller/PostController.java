@@ -1,5 +1,6 @@
 package com.example.auth3.controller;
 
+import com.example.auth3.dto.PostDto;
 import com.example.auth3.entity.Post;
 import com.example.auth3.response.LoginAndJoinResponse;
 import com.example.auth3.service.PostService;
@@ -7,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -31,7 +33,11 @@ public class PostController {
    }
 
     @PostMapping("")
-    public ResponseEntity<LoginAndJoinResponse> registerPost(@RequestBody Post post) {
+    public ResponseEntity<LoginAndJoinResponse> registerPost(
+            @RequestPart(value="post", required = true) PostDto post,
+            @RequestPart(value="image", required = false) MultipartFile image
+            ) {
+        postService.registerPost(post, image);
         LoginAndJoinResponse response = LoginAndJoinResponse.builder()
                 .code(HttpStatus.OK.value())
                 .httpStatus(HttpStatus.OK)

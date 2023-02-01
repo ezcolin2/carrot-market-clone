@@ -15,6 +15,9 @@ public class MemoryUserRepository implements UserRepository{
     private final BCryptPasswordEncoder encoder;
     private static Map<Long, User> users = new HashMap<>();
     private static Long sequence = 0L;
+    public void clearUsers() {
+        users = new HashMap<>();
+    }
 
     public User save(User user) {
 

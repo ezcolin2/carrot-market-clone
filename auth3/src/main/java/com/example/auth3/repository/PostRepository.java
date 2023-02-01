@@ -11,4 +11,5 @@ public interface PostRepository {
     public Optional<Post> findByPostId(Long postId);
 
     public List<Post> findAllPostByOffset(Long offset, Long limit);
+    public void clearPosts();
 }
