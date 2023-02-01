@@ -17,7 +17,8 @@ public class ImageSave{
         return random+originName;
     }
     private static String createDirPath(String changedName) {
-        return System.getProperty("user.dir")+"\\images\\"+changedName;
+
+        return "c:\\images\\"+changedName;
     }
 
     public static Image uploadImage(MultipartFile image) {
