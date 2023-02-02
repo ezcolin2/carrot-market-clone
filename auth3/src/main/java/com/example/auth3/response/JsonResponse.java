@@ -9,7 +9,7 @@ import org.springframework.http.HttpStatus;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
-public class LoginAndJoinResponse {
+public class JsonResponse {
     private int code;
     private HttpStatus httpStatus;
     private String message;

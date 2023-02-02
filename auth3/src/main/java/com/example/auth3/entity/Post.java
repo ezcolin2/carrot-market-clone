@@ -3,6 +3,8 @@ package com.example.auth3.entity;
 import com.example.auth3.etc.Image;
 import lombok.*;
 
+import java.util.List;
+
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -14,6 +16,6 @@ public class Post {
     private String writerId;
     private String time;
     private String content;
-    private Image image;
+    private List<Image> image;
 
 }

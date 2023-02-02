@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,14 +20,21 @@ import java.util.Optional;
 public class PostService {
     private final PostRepository postRepository;
 
-    public Post registerPost(PostDto post, MultipartFile image) {
-        Image uploadImage = ImageSave.uploadImage(image);
+    public Post registerPost(PostDto post,List<MultipartFile> image) {
+        if (image == null) {
+
+        }
+        List<Image> list = new ArrayList<>();
+        for (MultipartFile multipartFile : image) {
+            list.add(ImageSave.uploadImage(multipartFile));
+
+        }
         Post newPost = Post.builder()
                 .postTitle(post.getPostTitle())
                 .writerId(post.getWriterId())
                 .time(post.getTime())
                 .content(post.getContent())
-                .image(uploadImage).build();
+                .image(list).build();
 
         return postRepository.save(newPost);
     }

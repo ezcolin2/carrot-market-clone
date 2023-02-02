@@ -2,7 +2,7 @@ package com.example.auth3.controller;
 
 import com.example.auth3.dto.PostDto;
 import com.example.auth3.entity.Post;
-import com.example.auth3.response.LoginAndJoinResponse;
+import com.example.auth3.response.JsonResponse;
 import com.example.auth3.service.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -18,13 +18,13 @@ import java.util.List;
 public class PostController {
     private final PostService postService;
    @GetMapping("")
-   public ResponseEntity<LoginAndJoinResponse> getAllPostByOffset(
+   public ResponseEntity<JsonResponse> getAllPostByOffset(
            @RequestParam(name="offset")Long offset,
            @RequestParam(name="limit")Long limit
            ){
        List<Post> posts = postService.findAllPostByOffset(offset, limit);
 
-       LoginAndJoinResponse response = LoginAndJoinResponse.builder()
+       JsonResponse response = JsonResponse.builder()
                .code(HttpStatus.OK.value())
                .httpStatus(HttpStatus.OK)
                .message("게시글 가져오기 성공")
@@ -33,21 +33,21 @@ public class PostController {
    }
 
     @PostMapping("")
-    public ResponseEntity<LoginAndJoinResponse> registerPost(
+    public ResponseEntity<JsonResponse> registerPost(
             @RequestPart(value="post", required = true) PostDto post,
-            @RequestPart(value="image", required = false) MultipartFile image
+            @RequestPart(value="image", required = true) List<MultipartFile> image
             ) {
         postService.registerPost(post, image);
-        LoginAndJoinResponse response = LoginAndJoinResponse.builder()
+        JsonResponse response = JsonResponse.builder()
                 .code(HttpStatus.OK.value())
                 .httpStatus(HttpStatus.OK)
                 .message("게시글 등록 성공").build();
         return new ResponseEntity<>(response, response.getHttpStatus());
     }
    @GetMapping("/{id}")
-    public ResponseEntity<LoginAndJoinResponse> getPost(@PathVariable("id") Long id) {
+    public ResponseEntity<JsonResponse> getPost(@PathVariable("id") Long id) {
        Post post = postService.getPost(id);
-       LoginAndJoinResponse response = LoginAndJoinResponse.builder()
+       JsonResponse response = JsonResponse.builder()
                .code(HttpStatus.OK.value())
                .httpStatus(HttpStatus.OK)
                .message("게시글 가져오기 성공")

@@ -1,6 +1,6 @@
 package com.example.auth3.configuration;
 
-import com.example.auth3.response.LoginAndJoinResponse;
+import com.example.auth3.response.JsonResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
@@ -25,7 +25,7 @@ public class ExceptionHandlerFilter extends OncePerRequestFilter {
         try {
             filterChain.doFilter(request, response);
         } catch (ExpiredJwtException e) {
-            LoginAndJoinResponse newError = LoginAndJoinResponse.builder()
+            JsonResponse newError = JsonResponse.builder()
                     .code(HttpStatus.BAD_REQUEST.value())
                     .message("expired token")
                     .httpStatus(HttpStatus.BAD_REQUEST).build();
@@ -33,7 +33,7 @@ public class ExceptionHandlerFilter extends OncePerRequestFilter {
         }
             //토큰의 유효기간 만료
         catch (JwtException | IllegalArgumentException e) {
-            LoginAndJoinResponse newError = LoginAndJoinResponse.builder()
+            JsonResponse newError = JsonResponse.builder()
                     .code(HttpStatus.BAD_REQUEST.value())
                     .message("invalid token")
                     .httpStatus(HttpStatus.BAD_REQUEST).build();
@@ -43,7 +43,7 @@ public class ExceptionHandlerFilter extends OncePerRequestFilter {
     }
     private void setErrorResponse(
             HttpServletResponse response,
-            LoginAndJoinResponse error
+            JsonResponse error
     ){
         ObjectMapper objectMapper = new ObjectMapper();
         response.setStatus(error.getHttpStatus().value());

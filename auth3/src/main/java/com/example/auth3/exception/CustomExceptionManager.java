@@ -1,6 +1,6 @@
 package com.example.auth3.exception;
 
-import com.example.auth3.response.LoginAndJoinResponse;
+import com.example.auth3.response.JsonResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class CustomExceptionManager {
     @ExceptionHandler(DuplicatedUserIdException.class)
-    public ResponseEntity<LoginAndJoinResponse> duplicatedUserIdException(DuplicatedUserIdException e) {
-        LoginAndJoinResponse res = LoginAndJoinResponse.builder()
+    public ResponseEntity<JsonResponse> duplicatedUserIdException(DuplicatedUserIdException e) {
+        JsonResponse res = JsonResponse.builder()
                 .code(HttpStatus.CONFLICT.value())
                 .httpStatus(HttpStatus.CONFLICT)
                 .message(e.getMessage()).build();
@@ -18,8 +18,8 @@ public class CustomExceptionManager {
     }
 
     @ExceptionHandler(WrongUserPasswordException.class)
-    public ResponseEntity<LoginAndJoinResponse> wrongUserPasswordrException(WrongUserPasswordException e) {
-        LoginAndJoinResponse res = LoginAndJoinResponse.builder()
+    public ResponseEntity<JsonResponse> wrongUserPasswordrException(WrongUserPasswordException e) {
+        JsonResponse res = JsonResponse.builder()
                 .code(HttpStatus.BAD_REQUEST.value())
                 .httpStatus(HttpStatus.BAD_REQUEST)
                 .message(e.getMessage()).build();
@@ -27,8 +27,8 @@ public class CustomExceptionManager {
     }
 
     @ExceptionHandler(DataNotFoundException.class)
-    public ResponseEntity<LoginAndJoinResponse> userIdNotFoundException(DataNotFoundException e) {
-        LoginAndJoinResponse res = LoginAndJoinResponse.builder()
+    public ResponseEntity<JsonResponse> userIdNotFoundException(DataNotFoundException e) {
+        JsonResponse res = JsonResponse.builder()
                 .code(HttpStatus.NOT_FOUND.value())
                 .httpStatus(HttpStatus.NOT_FOUND)
                 .message(e.getMessage()).build();
@@ -38,8 +38,16 @@ public class CustomExceptionManager {
     }
 
     @ExceptionHandler(ImageUploadException.class)
-    public ResponseEntity<LoginAndJoinResponse> imageUploadException(ImageUploadException e) {
-        LoginAndJoinResponse res = LoginAndJoinResponse.builder()
+    public ResponseEntity<JsonResponse> imageUploadException(ImageUploadException e) {
+        JsonResponse res = JsonResponse.builder()
+                .code(HttpStatus.BAD_REQUEST.value())
+                .httpStatus(HttpStatus.BAD_REQUEST)
+                .message(e.getMessage()).build();
+        return new ResponseEntity<>(res, res.getHttpStatus());
+    }
+    @ExceptionHandler(NoImageUploadException.class)
+    public ResponseEntity<JsonResponse> noImageUploadException(NoImageUploadException e) {
+        JsonResponse res = JsonResponse.builder()
                 .code(HttpStatus.BAD_REQUEST.value())
                 .httpStatus(HttpStatus.BAD_REQUEST)
                 .message(e.getMessage()).build();
