@@ -11,5 +11,7 @@ public class PostDto {
     private String writerId;
     private String time;
     private String content;
+    private String region;
+    private int price;
 
 }

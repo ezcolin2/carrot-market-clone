@@ -34,7 +34,9 @@ public class PostService {
                 .writerId(post.getWriterId())
                 .time(post.getTime())
                 .content(post.getContent())
-                .image(list).build();
+                .image(list)
+                .region(post.getRegion())
+                .price(post.getPrice()).build();
 
         return postRepository.save(newPost);
     }
@@ -45,6 +47,10 @@ public class PostService {
             throw new DataNotFoundException("해당 게시글이");
         }
         return post.get();
+    }
+    public int getPostCount() {
+        return postRepository.getPostCount();
+
     }
 
     public List<Post> findAllPostByOffset(Long offset, Long limit) {

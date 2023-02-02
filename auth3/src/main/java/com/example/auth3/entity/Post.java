@@ -16,6 +16,11 @@ public class Post {
     private String writerId;
     private String time;
     private String content;
+    private String region;
+    private int price;
+    private int chats;
+    private int interests;
+    private int visits;
     private List<Image> image;
 
 }

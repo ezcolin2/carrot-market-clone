@@ -18,6 +18,9 @@ public class MemoryPostRepository implements PostRepository{
     @Override
     public Post save(Post post) {
         post.setId(++sequence);
+        post.setChats(0);
+        post.setInterests(0);
+        post.setVisits(0);
         posts.put(post.getId(), post);
         return post;
     }
@@ -32,5 +35,10 @@ public class MemoryPostRepository implements PostRepository{
     public List<Post> findAllPostByOffset(Long offset, Long limit) {
         return posts.values().stream()
                 .filter(e -> e.getId() >= offset && e.getId() < offset + limit).toList();
+    }
+
+    @Override
+    public int getPostCount(){
+        return posts.size();
     }
 }

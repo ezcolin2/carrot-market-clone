@@ -2,6 +2,7 @@ package com.example.auth3.controller;
 
 import com.example.auth3.dto.PostDto;
 import com.example.auth3.entity.Post;
+import com.example.auth3.etc.PostCount;
 import com.example.auth3.response.JsonResponse;
 import com.example.auth3.service.PostService;
 import lombok.RequiredArgsConstructor;
@@ -54,4 +55,14 @@ public class PostController {
                .data(post).build();
        return new ResponseEntity<>(response, response.getHttpStatus());
    }
+    @GetMapping("/count")
+    public ResponseEntity<JsonResponse> getPostCount() {
+        PostCount count = new PostCount(postService.getPostCount());
+        JsonResponse response = JsonResponse.builder()
+                .code(HttpStatus.OK.value())
+                .httpStatus(HttpStatus.OK)
+                .message("게시글 개수 가져오기 성공")
+                .data(count).build();
+        return new ResponseEntity<>(response, response.getHttpStatus());
+    }
 }
