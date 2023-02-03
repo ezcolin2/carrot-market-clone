@@ -1,8 +1,8 @@
 package com.example.auth3.controller;
 
-import com.example.auth3.dto.PostDto;
+import com.example.auth3.dto.request.PostRequest;
 import com.example.auth3.entity.Post;
-import com.example.auth3.etc.PostCount;
+import com.example.auth3.dto.response.PostCountResponse;
 import com.example.auth3.response.JsonResponse;
 import com.example.auth3.service.PostService;
 import lombok.RequiredArgsConstructor;
@@ -35,7 +35,7 @@ public class PostController {
 
     @PostMapping("")
     public ResponseEntity<JsonResponse> registerPost(
-            @RequestPart(value="post", required = true) PostDto post,
+            @RequestPart(value="post", required = true) PostRequest post,
             @RequestPart(value="image", required = true) List<MultipartFile> image
             ) {
         postService.registerPost(post, image);
@@ -48,6 +48,7 @@ public class PostController {
    @GetMapping("/{id}")
     public ResponseEntity<JsonResponse> getPost(@PathVariable("id") Long id) {
        Post post = postService.getPost(id);
+       post.updateVisits();
        JsonResponse response = JsonResponse.builder()
                .code(HttpStatus.OK.value())
                .httpStatus(HttpStatus.OK)
@@ -57,7 +58,7 @@ public class PostController {
    }
     @GetMapping("/count")
     public ResponseEntity<JsonResponse> getPostCount() {
-        PostCount count = new PostCount(postService.getPostCount());
+        PostCountResponse count = new PostCountResponse(postService.getPostCount());
         JsonResponse response = JsonResponse.builder()
                 .code(HttpStatus.OK.value())
                 .httpStatus(HttpStatus.OK)

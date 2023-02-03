@@ -1,12 +1,11 @@
 package com.example.auth3.service;
 
-import com.example.auth3.dto.PostDto;
+import com.example.auth3.dto.request.PostRequest;
 import com.example.auth3.entity.Post;
-import com.example.auth3.etc.Image;
+import com.example.auth3.dto.response.Image;
 import com.example.auth3.etc.ImageSave;
 import com.example.auth3.exception.DataNotFoundException;
 import com.example.auth3.repository.PostRepository;
-import com.example.auth3.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -20,7 +19,7 @@ import java.util.Optional;
 public class PostService {
     private final PostRepository postRepository;
 
-    public Post registerPost(PostDto post,List<MultipartFile> image) {
+    public Post registerPost(PostRequest post, List<MultipartFile> image) {
         if (image == null) {
 
         }
@@ -46,6 +45,7 @@ public class PostService {
         if (post.isEmpty()) {
             throw new DataNotFoundException("해당 게시글이");
         }
+        post.get().updateVisits();
         return post.get();
     }
     public int getPostCount() {

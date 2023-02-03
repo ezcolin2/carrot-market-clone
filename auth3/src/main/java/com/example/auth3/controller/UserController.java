@@ -1,7 +1,7 @@
 package com.example.auth3.controller;
 
-import com.example.auth3.dto.TokenResponse;
-import com.example.auth3.dto.UserJoinDto;
+import com.example.auth3.dto.response.TokenResponse;
+import com.example.auth3.dto.request.UserJoinRequest;
 import com.example.auth3.response.JsonResponse;
 import com.example.auth3.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +16,7 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("/join")
-    public ResponseEntity<JsonResponse> join(@RequestBody UserJoinDto user) {
+    public ResponseEntity<JsonResponse> join(@RequestBody UserJoinRequest user) {
         String message = userService.join(user.getUserId(), user.getUserPwd());
 
         JsonResponse res = JsonResponse.builder()
@@ -28,7 +28,7 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<JsonResponse> login(@RequestBody UserJoinDto user) {
+    public ResponseEntity<JsonResponse> login(@RequestBody UserJoinRequest user) {
         String token = userService.login(user.getUserId(), user.getUserPwd());
         JsonResponse response = JsonResponse.builder()
                 .code(HttpStatus.OK.value())

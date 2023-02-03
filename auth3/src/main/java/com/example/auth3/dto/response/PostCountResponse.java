@@ -1,10 +1,10 @@
-package com.example.auth3.etc;
+package com.example.auth3.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @AllArgsConstructor
 @Getter
-public class PostCount {
+public class PostCountResponse {
     private int count;
 }

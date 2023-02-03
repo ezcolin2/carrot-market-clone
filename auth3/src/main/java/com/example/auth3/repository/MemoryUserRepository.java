@@ -18,13 +18,13 @@ public class MemoryUserRepository implements UserRepository{
     public void clearUsers() {
         users = new HashMap<>();
     }
-
+    @Override
     public User save(User user) {
 
         users.put(++sequence, user);
         return user;
     }
-
+    @Override
     public Optional<User> findByUserId(String userId){
         return users.values().stream()
                 .filter(e->e.getUserId().equals(userId)).findAny();

@@ -1,8 +1,11 @@
 package com.example.auth3.entity;
 
 import lombok.*;
-
-@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+@Setter
+@Getter
 public class User {
     private Long id;
     private String userId;

@@ -1,4 +1,4 @@
-package com.example.auth3.dto;
+package com.example.auth3.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import lombok.AllArgsConstructor;

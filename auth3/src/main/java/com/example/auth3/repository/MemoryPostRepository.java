@@ -1,6 +1,7 @@
 package com.example.auth3.repository;
 
 import com.example.auth3.entity.Post;
+import com.example.auth3.exception.DataNotFoundException;
 import org.springframework.stereotype.Repository;
 
 import java.util.HashMap;
@@ -41,4 +42,14 @@ public class MemoryPostRepository implements PostRepository{
     public int getPostCount(){
         return posts.size();
     }
+
+//    @Override
+//    public void updateVisits(Long postId) {
+//        Optional<Post> post = posts.values().stream()
+//                .filter(e -> postId == e.getId()).findAny();
+//        if (post.isEmpty()) {
+//            throw new DataNotFoundException("해당 게시글이 존재하지 않습니다.");
+//        }
+//        post.get().updateVisits();
+//    }
 }

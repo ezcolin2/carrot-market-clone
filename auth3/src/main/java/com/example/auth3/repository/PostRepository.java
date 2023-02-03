@@ -14,4 +14,6 @@ public interface PostRepository {
 
     public int getPostCount();
     public void clearPosts();
+
+//    void updateVisits(Long postId);
 }

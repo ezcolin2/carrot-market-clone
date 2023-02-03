@@ -1,6 +1,7 @@
 package com.example.auth3.etc;
 
 
+import com.example.auth3.dto.response.Image;
 import com.example.auth3.exception.ImageUploadException;
 import org.springframework.web.multipart.MultipartFile;
 

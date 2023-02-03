@@ -1,4 +1,4 @@
-package com.example.auth3.etc;
+package com.example.auth3.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
