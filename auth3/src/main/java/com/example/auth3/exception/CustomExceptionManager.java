@@ -53,4 +53,11 @@ public class CustomExceptionManager {
                 .message(e.getMessage()).build();
         return new ResponseEntity<>(res, res.getHttpStatus());
     }
-}
+    @ExceptionHandler(DuplicateException.class)
+    public ResponseEntity<JsonResponse> duplicateException(DuplicateException e) {
+        JsonResponse res = JsonResponse.builder()
+                .code(HttpStatus.CONFLICT.value())
+                .httpStatus(HttpStatus.CONFLICT)
+                .message(e.getMessage()).build();
+        return new ResponseEntity<>(res, res.getHttpStatus());
+    }}

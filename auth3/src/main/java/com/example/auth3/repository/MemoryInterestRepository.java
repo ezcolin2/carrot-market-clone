@@ -1,6 +1,8 @@
 package com.example.auth3.repository;
 
+import com.example.auth3.dto.request.InterestRequest;
 import com.example.auth3.entity.Interest;
+import com.example.auth3.exception.DataNotFoundException;
 import org.springframework.stereotype.Repository;
 
 import java.util.HashMap;
@@ -22,21 +24,25 @@ public class MemoryInterestRepository implements InterestRepository{
     @Override
     public List<Interest> findInterestsByUserId(String userId) {
         return interests.values().stream().filter(
-                e->e.getUserId()==userId
+                e->e.getUserId().equals(userId)
         ).toList();
     }
 
     @Override
     public Optional<Interest> findInterestByUserIdAndPostId(String userId, Long postId) {
         return interests.values().stream().filter(
-                e->e.getPostId()==postId&&e.getUserId()==userId
+                e->e.getPostId().equals(postId)&&e.getUserId().equals(userId)
         ).findAny();
     }
 
     @Override
     public int getInterestCount(Long postId) {
         return interests.values().stream().filter(
-                e->e.getPostId()==postId
+                e->e.getPostId().equals(postId)
         ).toList().size();//이게 맞나?
+    }
+    @Override
+    public void deleteInterest(Long interestId) {
+        interests.remove(interestId);
     }
 }
