@@ -48,7 +48,6 @@ public class PostController {
    @GetMapping("/{id}")
     public ResponseEntity<JsonResponse> getPost(@PathVariable("id") Long id) {
        Post post = postService.getPost(id);
-       post.updateVisits();
        JsonResponse response = JsonResponse.builder()
                .code(HttpStatus.OK.value())
                .httpStatus(HttpStatus.OK)
