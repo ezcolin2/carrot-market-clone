@@ -41,7 +41,7 @@ public class InterestController {
 
     }
 
-    @GetMapping("/exist")
+    @PostMapping("/exist")
     public ResponseEntity<JsonResponse> getIsInterest(@RequestBody InterestRequest interest) {
         Interest findInterest = interestService.getInterest(interest);
         JsonResponse response = JsonResponse.builder()
