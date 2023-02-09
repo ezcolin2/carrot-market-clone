@@ -13,7 +13,7 @@ public class PostRequest {
     private String region;
     private int price;
 
-    public static Post toEntity(Post post) {
+    public static Post toEntity(PostRequest post) {
         return Post.builder()
                 .postTitle(post.getPostTitle())
                 .writerId(post.getWriterId())

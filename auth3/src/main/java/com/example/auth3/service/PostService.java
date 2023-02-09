@@ -53,8 +53,10 @@ public class PostService {
 
     }
 
+
     public List<Post> findAllPostByOffset(Long offset, Long limit) {
         return postRepository.findAllPostByOffset(offset, limit);
     }
+
 
 }

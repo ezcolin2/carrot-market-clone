@@ -1,6 +1,7 @@
 package com.example.auth3.service;
 
 import com.example.auth3.dto.request.InterestRequest;
+import com.example.auth3.dto.response.InterestResponse;
 import com.example.auth3.dto.response.IsInterestResponse;
 import com.example.auth3.entity.Interest;
 import com.example.auth3.entity.Post;
@@ -44,14 +45,17 @@ public class InterestService {
 
     }
 
-    public List<Interest> findInterestsByUserId(String userId) {
-        return interestRepository.findInterestsByUserId(userId);
+    public List<InterestResponse> findInterestsByUserId(String userId) {
+        return interestRepository.findInterestsByUserId(userId).stream().map(
+                e->InterestResponse.of(e, postRepository.findByPostId(e.getPostId()).get())
+        ).toList();
 
     }
 
     public void deleteInterest(Long interestId) {
 
         interestRepository.deleteInterest(interestId);
+
     }
 //    public void deleteInterest(Interest interest) {
 //        Interest newPost = interestRepository.save(interest);

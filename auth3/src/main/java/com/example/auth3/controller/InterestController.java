@@ -1,6 +1,7 @@
 package com.example.auth3.controller;
 
 import com.example.auth3.dto.request.InterestRequest;
+import com.example.auth3.dto.response.InterestResponse;
 import com.example.auth3.dto.response.IsInterestResponse;
 import com.example.auth3.entity.Interest;
 import com.example.auth3.exception.DataNotFoundException;
@@ -31,7 +32,7 @@ public class InterestController {
 
     @GetMapping("")
     public ResponseEntity<JsonResponse> findInterestsByUserId(@RequestParam String userId) {
-        List<Interest> interests = interestService.findInterestsByUserId(userId);
+        List<InterestResponse> interests = interestService.findInterestsByUserId(userId);
         JsonResponse response = JsonResponse.builder()
                 .code(HttpStatus.OK.value())
                 .httpStatus(HttpStatus.OK)

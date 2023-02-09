@@ -19,13 +19,13 @@ public class Post {
     private String time;
     private String content;
     private String region;
-    private int price;
+    private int price;//int 사용시 값 설정을 하지 않으면 0으로 됨
     private int chats;
     private int interests;
     private int visits;
     private List<Image> image;
     public void updateVisits() {
-        this.visits=this.visits+1;
+        this.visits+=1;
     }
 
     public void plusInterests() {
