@@ -1,8 +1,11 @@
 package com.example.auth3.entity;
 
+import com.example.auth3.constant.ItemSellStatus;
 import com.example.auth3.dto.response.Image;
+import jakarta.persistence.Entity;
 import lombok.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Builder
@@ -16,14 +19,15 @@ public class Post {
     private Long id;
     private String postTitle;
     private String writerId;
-    private String time;
     private String content;
     private String region;
     private int price;//int 사용시 값 설정을 하지 않으면 0으로 됨
+    private LocalDateTime time;
     private int chats;
     private int interests;
     private int visits;
     private List<Image> image;
+    private ItemSellStatus sellStatus;
     public void updateVisits() {
         this.visits+=1;
     }
