@@ -13,6 +13,7 @@ import java.util.List;
 @AllArgsConstructor
 @Getter
 @Setter
+@Entity
 //필드 값이 많아서 빌더 패턴 사용
 //조회수, 채팅, 관심의 경우 입력받는게 아니고 특정 행위에 따라 값을 변경시켜야 하므로 setter 추가
 public class Post {
