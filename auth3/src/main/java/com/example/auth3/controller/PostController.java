@@ -23,7 +23,7 @@ public class PostController {
            @RequestParam(name="offset")Long offset,
            @RequestParam(name="limit")Long limit
            ){
-       List<Post> posts = postService.findAllPostByOffset(offset, limit);
+       List<Post> posts = postService.findAllPostByOffset(offset, offset+limit-1);
 
        JsonResponse response = JsonResponse.builder()
                .code(HttpStatus.OK.value())

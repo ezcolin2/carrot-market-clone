@@ -17,7 +17,6 @@ public class PostRequest {
         return Post.builder()
                 .postTitle(post.getPostTitle())
                 .writerId(post.getWriterId())
-                .time(post.getTime())
                 .content(post.getContent())
                 .region(post.getRegion())
                 .price(post.getPrice()).build();

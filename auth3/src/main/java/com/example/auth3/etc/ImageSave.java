@@ -1,7 +1,8 @@
 package com.example.auth3.etc;
 
 
-import com.example.auth3.dto.response.Image;
+import com.example.auth3.entity.Image;
+import com.example.auth3.entity.Post;
 import com.example.auth3.exception.ImageUploadException;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -20,7 +21,7 @@ public class ImageSave{
         //이미지가 저장될 경로. 필요에 따라 경로 조정
     }
 
-    public static Image uploadImage(MultipartFile image) {
+    public static Image uploadImage(MultipartFile image, Post post) {
         String originName = image.getOriginalFilename();
         String changedName = changedImageName(originName);
         String storedImagePath = createDirPath(changedName);
@@ -32,7 +33,11 @@ public class ImageSave{
             throw new ImageUploadException();
 
         }
-        return new Image(originName, storedImagePath);
+        Image newImage = Image.builder()
+                .originName(originName)
+                .storedImagePath(storedImagePath)
+                .post(post).build();
+        return newImage;
     }
 
 }

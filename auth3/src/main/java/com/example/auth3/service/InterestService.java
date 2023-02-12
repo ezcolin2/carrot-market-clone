@@ -28,7 +28,7 @@ public class InterestService {
         }
         Interest newInterest = InterestRequest.toEntity(interest);
         Interest newPost = interestRepository.save(newInterest);
-        Optional<Post> post = postRepository.findByPostId(interest.getPostId());
+        Optional<Post> post = postRepository.findById(interest.getPostId());
 
         if (post.isEmpty()) {
             throw new DataNotFoundException("해당 게시글이");
@@ -47,7 +47,7 @@ public class InterestService {
 
     public List<InterestResponse> findInterestsByUserId(String userId) {
         return interestRepository.findInterestsByUserId(userId).stream().map(
-                e->InterestResponse.of(e, postRepository.findByPostId(e.getPostId()).get())
+                e->InterestResponse.of(e, postRepository.findById(e.getPostId()).get())
         ).toList();
 
     }
