@@ -17,7 +17,7 @@ public class Interest {
     private Long id; //pk
     @JsonIgnore
     @ManyToOne(fetch=FetchType.LAZY)
-    @JoinColumn(name="user_email")
+    @JoinColumn(name="Member_email")
     private Member member; //관심을 누른 유저 아이디
     @JsonIgnore
     @ManyToOne(fetch=FetchType.LAZY)

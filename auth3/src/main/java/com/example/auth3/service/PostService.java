@@ -7,7 +7,7 @@ import com.example.auth3.etc.ImageSave;
 import com.example.auth3.exception.DataNotFoundException;
 import com.example.auth3.exception.ImageUploadException;
 import com.example.auth3.repository.PostRepository;
-import com.example.auth3.repository.UserRepository;
+import com.example.auth3.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -19,7 +19,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class PostService {
     private final PostRepository postRepository;
-    private final UserRepository userRepository;
+    private final MemberRepository memberRepository;
 
     public Post registerPost(PostRequest post, List<MultipartFile> image, Member member) {
         if (image == null) {

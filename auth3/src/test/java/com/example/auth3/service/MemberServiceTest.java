@@ -3,7 +3,7 @@ package com.example.auth3.service;
 import com.example.auth3.entity.Member;
 import com.example.auth3.exception.DataNotFoundException;
 import com.example.auth3.exception.DuplicatedUserIdException;
-import com.example.auth3.repository.UserRepository;
+import com.example.auth3.repository.MemberRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -13,34 +13,34 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
 public class MemberServiceTest {
-    UserRepository userRepository;
+    MemberRepository memberRepository;
 
-    UserService userService;
+    MemberService memberService;
     BCryptPasswordEncoder bcryptPasswordEncoder;
 
     @BeforeEach
     public void beforeEach() {
         bcryptPasswordEncoder = new BCryptPasswordEncoder();
-        userService = new UserService(userRepository, bcryptPasswordEncoder);
+        memberService = new MemberService(memberRepository, bcryptPasswordEncoder);
     }
 
 
     public Member join(Member member) {
-        Member newMember = userRepository.save(member);
+        Member newMember = memberRepository.save(member);
         return newMember;
     }
     public void login(Member member) {
-        userService.login(member.getUserEmail(), member.getUserPwd());
+        memberService.login(member.getMemberEmail(), member.getMemberPwd());
     }
     @Test
     public void 회원가입_성공() {
         Member newMember = new Member();
-        newMember.setUserEmail("testUser");
-        newMember.setUserPwd("testUser");
+        newMember.setMemberEmail("testMember");
+        newMember.setMemberPwd("testMember");
 
         Member member = join(newMember);
         org.assertj.core.api.Assertions.assertThat(
-                newMember.getUserEmail().equals(member.getUserEmail())
+                newMember.getMemberEmail().equals(member.getMemberEmail())
         );
 
 
@@ -49,15 +49,15 @@ public class MemberServiceTest {
     @Test
     public void 회원가입_아이디_중복() {
         Member newMember = new Member();
-        newMember.setUserEmail("testUser");
-        newMember.setUserPwd("testUser");
+        newMember.setMemberEmail("testMember");
+        newMember.setMemberPwd("testMember");
         join(newMember);
 
         Member newMember2 = new Member();
-        newMember2.setUserEmail("testUser");
-        newMember2.setUserPwd("testUser");
+        newMember2.setMemberEmail("testMember");
+        newMember2.setMemberPwd("testMember");
         assertThrows(DuplicatedUserIdException.class,
-                ()->userService.join(newMember2.getUserEmail(), newMember2.getUserPwd())
+                ()-> memberService.join(newMember2.getMemberEmail(), newMember2.getMemberPwd())
         );
 
     }
@@ -65,8 +65,8 @@ public class MemberServiceTest {
     @Test
     public void 로그인_성공() {
         Member newMember = new Member();
-        newMember.setUserEmail("testUser");
-        newMember.setUserPwd("testUser");
+        newMember.setMemberEmail("testMember");
+        newMember.setMemberPwd("testMember");
         Member joinMember = join(newMember);
         login(joinMember);
 
@@ -75,8 +75,8 @@ public class MemberServiceTest {
     @Test
     public void 로그인_실패_아이디_없음() {
         Member newMember = new Member();
-        newMember.setUserEmail("testUser");
-        newMember.setUserPwd("testUser");
+        newMember.setMemberEmail("testMember");
+        newMember.setMemberPwd("testMember");
         assertThrows(DataNotFoundException.class,
                 ()->login(newMember));
     }

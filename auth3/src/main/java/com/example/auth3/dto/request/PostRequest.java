@@ -6,7 +6,6 @@ import lombok.*;
 @Getter
 public class PostRequest {
     private String postTitle;
-    private String writerEmail;
     private String time;
     private String content;
     private String region;

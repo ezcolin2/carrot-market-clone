@@ -4,21 +4,24 @@ import com.example.auth3.dto.request.InterestRequest;
 import com.example.auth3.entity.Interest;
 import com.example.auth3.entity.Post;
 import com.example.auth3.entity.Member;
+import com.example.auth3.exception.DataNotFoundException;
 import com.example.auth3.exception.DuplicateException;
 import com.example.auth3.repository.InterestRepository;
 import com.example.auth3.repository.PostRepository;
-import com.example.auth3.repository.UserRepository;
+import com.example.auth3.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class InterestService {
     private final InterestRepository interestRepository;
     private final PostRepository postRepository;
-    private final UserRepository userRepository;
+    private final MemberRepository memberRepository;
 
-    public Interest registerInterest(InterestRequest interest, Post post, Member member) {
+    public void registerInterest(Post post, Member member) {
         if (interestRepository.findByPostAndMember(post, member).isPresent()){
             throw new DuplicateException();
         }
@@ -26,7 +29,9 @@ public class InterestService {
                 .post(post)
                 .member(member).build();
 
-        Interest newPost = interestRepository.save(newInterest);
+        interestRepository.save(newInterest);
+
+//        Interest newPost = interestRepository.save(newInterest);
 
 //        Optional<Post> post = postRepository.findById(interest.getPostId());
 //
@@ -34,8 +39,24 @@ public class InterestService {
 //            throw new DataNotFoundException("해당 게시글이");
 //        }
         post.plusInterests();
-        return newPost;
     }
+
+    public void deleteInterest(Post post, Member member) {
+        Optional<Interest> interest = interestRepository.findByPostAndMember(post, member);
+        if (interest.isEmpty()){
+            throw new DataNotFoundException("관심 상품이");
+        }
+        interestRepository.delete(interest.get());
+    }
+
+    public Interest getInterest(Post post, Member member) {
+        Optional<Interest> interest = interestRepository.findByPostAndMember(post, member);
+        if (interest.isEmpty()){
+            throw new DataNotFoundException("관심 상품이");
+        }
+        return interest.get();
+    }
+
 //    public Interest getInterest(InterestRequest interest) {
 //        Optional<Interest> findInterest = interestRepository.findInterestByUserIdAndPostId(interest.getUserEmail(), interest.getPostId());
 //        if (findInterest.isEmpty()) {

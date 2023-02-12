@@ -12,6 +12,8 @@ public interface InterestRepository extends JpaRepository<Interest, Long> {
 
     public Optional<Interest> findByPostAndMember(Post post, Member member);
 
+
+
 //    public List<Interest> findInterestsByUserId(String userId);
 
 //    public List<Interest> findByUserEmail(String userEmail);

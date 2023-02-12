@@ -6,10 +6,11 @@ import com.example.auth3.dto.response.PostCountResponse;
 import com.example.auth3.entity.Member;
 import com.example.auth3.response.JsonResponse;
 import com.example.auth3.service.PostService;
-import com.example.auth3.service.UserService;
+import com.example.auth3.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -20,7 +21,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class PostController {
     private final PostService postService;
-    private final UserService userService;
+    private final MemberService memberService;
    @GetMapping("")
    public ResponseEntity<JsonResponse> getAllPostByOffset(
            @RequestParam(name="offset")Long offset,
@@ -41,7 +42,9 @@ public class PostController {
             @RequestPart(value="post", required = true) PostRequest post,
             @RequestPart(value="image", required = true) List<MultipartFile> image
             ) {
-        Member findMember = userService.getUserByUserEmail(post.getWriterEmail());
+
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        Member findMember = memberService.getMemberByUserEmail(email);
         postService.registerPost(post, image, findMember);
         JsonResponse response = JsonResponse.builder()
                 .code(HttpStatus.OK.value())

@@ -15,12 +15,12 @@ import java.util.List;
 public class Member {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="user_id")
+    @Column(name="member_id")
     private Long id;
-    @Column(name="user_email")
-    private String userEmail;
-    @Column(name="user_pwd")
-    private String userPwd;
+    @Column(name="member_email")
+    private String memberEmail;
+    @Column(name="member_pwd")
+    private String memberPwd;
     @OneToMany(fetch=FetchType.LAZY,
             cascade = CascadeType.ALL,
             orphanRemoval = true,
