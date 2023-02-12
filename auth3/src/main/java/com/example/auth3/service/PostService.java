@@ -45,7 +45,7 @@ public class PostService {
         if (post.isEmpty()) {
             throw new DataNotFoundException("해당 게시글이");
         }
-//        post.get().updateVisits();
+        post.get().updateVisits();
         return post.get();
     }
     public int getPostCount() {

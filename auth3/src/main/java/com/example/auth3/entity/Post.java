@@ -4,6 +4,9 @@ import com.example.auth3.constant.ItemSellStatus;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.annotation.LastModifiedDate;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -17,7 +20,7 @@ import java.util.List;
 @Entity
 //필드 값이 많아서 빌더 패턴 사용
 //조회수, 채팅, 관심의 경우 입력받는게 아니고 특정 행위에 따라 값을 변경시켜야 하므로 setter 추가
-public class Post {
+public class Post extends BaseTime{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="post_id")
@@ -33,18 +36,14 @@ public class Post {
     @Column(name="price")
     private int price;//int 사용시 값 설정을 하지 않으면 0으로 됨
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
-    @JsonIgnore
-    private final List<Image> images = new ArrayList<>();
-    @Column(name="write_time")
-
-    private LocalDateTime writeTime;
-    @Column(name="update_time")
-    private LocalDateTime updateTime;
+    @Builder.Default
+    private List<Image> images = new ArrayList<>();
     private int chats;
     private int interests;
     private int visits;
     @Enumerated(EnumType.STRING)
-    private ItemSellStatus sellStatus;
+    @Builder.Default
+    private ItemSellStatus sellStatus = ItemSellStatus.SELL;
     public void updateVisits() {
         this.visits+=1;
     }
