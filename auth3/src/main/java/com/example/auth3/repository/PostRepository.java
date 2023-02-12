@@ -1,7 +1,6 @@
 package com.example.auth3.repository;
 
 import com.example.auth3.entity.Post;
-import com.example.auth3.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

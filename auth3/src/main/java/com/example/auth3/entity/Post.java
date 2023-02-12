@@ -1,14 +1,11 @@
 package com.example.auth3.entity;
 
 import com.example.auth3.constant.ItemSellStatus;
+import com.example.auth3.dto.request.PostRequest;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedBy;
-import org.springframework.data.annotation.LastModifiedDate;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,8 +22,10 @@ public class Post extends BaseTime{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="post_id")
     private Long id;
-    @Column(name = "writer_id")
-    private String writerId;
+    @JsonIgnore
+    @ManyToOne
+    @JoinColumn(name="user_id")
+    private Member member;
     @Column(name="post_title")
     private String postTitle;
     @Column(name="post_content")
@@ -35,7 +34,7 @@ public class Post extends BaseTime{
     private String region;
     @Column(name="price")
     private int price;//int 사용시 값 설정을 하지 않으면 0으로 됨
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, fetch=FetchType.LAZY, orphanRemoval = true)
     @Builder.Default
     private List<Image> images = new ArrayList<>();
     private int chats;
@@ -54,7 +53,14 @@ public class Post extends BaseTime{
     public void minusInterests() {
         this.interests=this.interests-1;
     }
-
+    public static Post createEntity(PostRequest post, Member member) {//user를 저장해야함
+        return Post.builder()
+                .postTitle(post.getPostTitle())
+                .member(member)
+                .content(post.getContent())
+                .region(post.getRegion())
+                .price(post.getPrice()).build();
+    }
 
 
 }

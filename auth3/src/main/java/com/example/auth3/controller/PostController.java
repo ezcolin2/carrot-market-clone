@@ -3,8 +3,10 @@ package com.example.auth3.controller;
 import com.example.auth3.dto.request.PostRequest;
 import com.example.auth3.entity.Post;
 import com.example.auth3.dto.response.PostCountResponse;
+import com.example.auth3.entity.Member;
 import com.example.auth3.response.JsonResponse;
 import com.example.auth3.service.PostService;
+import com.example.auth3.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +20,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class PostController {
     private final PostService postService;
+    private final UserService userService;
    @GetMapping("")
    public ResponseEntity<JsonResponse> getAllPostByOffset(
            @RequestParam(name="offset")Long offset,
@@ -38,7 +41,8 @@ public class PostController {
             @RequestPart(value="post", required = true) PostRequest post,
             @RequestPart(value="image", required = true) List<MultipartFile> image
             ) {
-        postService.registerPost(post, image);
+        Member findMember = userService.getUserByUserEmail(post.getWriterEmail());
+        postService.registerPost(post, image, findMember);
         JsonResponse response = JsonResponse.builder()
                 .code(HttpStatus.OK.value())
                 .httpStatus(HttpStatus.OK)

@@ -1,6 +1,6 @@
 package com.example.auth3.service;
 
-import com.example.auth3.entity.User;
+import com.example.auth3.entity.Member;
 import com.example.auth3.exception.DuplicatedUserIdException;
 import com.example.auth3.exception.DataNotFoundException;
 import com.example.auth3.exception.WrongUserPasswordException;
@@ -23,19 +23,19 @@ public class UserService {
     @Value("${jwt.expiredMs}")
     private Long expiredMs;
 
-    public String join(String userId, String userPwd) {
-        if (userRepository.findByUserId(userId).isPresent()){
+    public String join(String userEmail, String userPwd) {
+        if (userRepository.findByUserEmail(userEmail).isPresent()){
             throw new DuplicatedUserIdException();
         }
-        User newUser = new User();
-        newUser.setUserId(userId);
-        newUser.setUserPwd(encoder.encode(userPwd));
-        userRepository.save(newUser);
+        Member newMember = Member.builder()
+                        .userEmail(userEmail)
+                                .userPwd(encoder.encode(userPwd)).build();
+        userRepository.save(newMember);
         return "회원가입 성공!";
     }
 
-    public String login(String userId, String userPwd) {
-        Optional<User> user = userRepository.findByUserId(userId);
+    public String login(String userEmail, String userPwd) {
+        Optional<Member> user = userRepository.findByUserEmail(userEmail);
         if (user.isEmpty()) {
             throw new DataNotFoundException("해당 유저가");
         }
@@ -45,6 +45,14 @@ public class UserService {
         }
         throw new WrongUserPasswordException();
 
+    }
+
+    public Member getUserByUserEmail(String userEmail) {
+        Optional<Member> newUser = userRepository.findByUserEmail(userEmail);
+        if (newUser.isEmpty()) {
+            throw new DataNotFoundException("해당 유저가");
+        }
+        return newUser.get();
     }
 
 }

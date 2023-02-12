@@ -2,16 +2,16 @@ package com.example.auth3.service;
 
 import com.example.auth3.dto.request.PostRequest;
 import com.example.auth3.entity.Post;
-import com.example.auth3.entity.Image;
+import com.example.auth3.entity.Member;
 import com.example.auth3.etc.ImageSave;
 import com.example.auth3.exception.DataNotFoundException;
 import com.example.auth3.exception.ImageUploadException;
 import com.example.auth3.repository.PostRepository;
+import com.example.auth3.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,17 +19,14 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class PostService {
     private final PostRepository postRepository;
+    private final UserRepository userRepository;
 
-    public Post registerPost(PostRequest post, List<MultipartFile> image) {
+    public Post registerPost(PostRequest post, List<MultipartFile> image, Member member) {
         if (image == null) {
             throw new ImageUploadException();
         }
-        Post newPost = Post.builder()
-                .postTitle(post.getPostTitle())
-                .writerId(post.getWriterId())
-                .content(post.getContent())
-                .region(post.getRegion())
-                .price(post.getPrice()).build();
+//        User user = userRepository.findByUserId(post.getWriterId()).get();
+        Post newPost = Post.createEntity(post, member);
 //        List<Image> list = new ArrayList<>();
         for (MultipartFile multipartFile : image) {
 //            list.add(ImageSave.uploadImage(multipartFile));

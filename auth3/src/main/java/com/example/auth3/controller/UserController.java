@@ -2,6 +2,7 @@ package com.example.auth3.controller;
 
 import com.example.auth3.dto.response.TokenResponse;
 import com.example.auth3.dto.request.UserJoinRequest;
+import com.example.auth3.dto.response.UserResponse;
 import com.example.auth3.response.JsonResponse;
 import com.example.auth3.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -37,5 +38,16 @@ public class UserController {
                 .data(new TokenResponse(token)).build();
         return new ResponseEntity<JsonResponse>(response, response.getHttpStatus());
 
+    }
+
+    @GetMapping("")
+    public ResponseEntity<JsonResponse> getUserByUserEmail(@RequestParam String userEmail) {
+        UserResponse user = UserResponse.of(userService.getUserByUserEmail(userEmail));
+        JsonResponse response = JsonResponse.builder()
+                .code(HttpStatus.OK.value())
+                .httpStatus(HttpStatus.OK)
+                .message("유저를 찾았습니다.")
+                .data(user).build();
+        return new ResponseEntity<>(response, response.getHttpStatus());
     }
 }

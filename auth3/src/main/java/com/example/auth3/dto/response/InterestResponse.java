@@ -15,8 +15,8 @@ public class InterestResponse {
 
     public static InterestResponse of(Interest interest, Post post) {
         return InterestResponse.builder()
-                .userId(interest.getUserId())
-                .postId(interest.getPostId())
+                .userId(interest.getMember().getUserEmail())
+                .postId(interest.getPost().getId())
                 .post(post).build();
     }
 }
