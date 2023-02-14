@@ -31,6 +31,7 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.POST, "/api/posts").authenticated()
                 .requestMatchers(HttpMethod.DELETE, "/api/users").authenticated()
                 .requestMatchers(HttpMethod.GET, "/api/users/**").authenticated()
+                .requestMatchers("/api/users/token/**").authenticated()
                 .requestMatchers("/api/interests/**").authenticated()
                 .anyRequest().permitAll()
                 .and()
