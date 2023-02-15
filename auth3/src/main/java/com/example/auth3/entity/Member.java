@@ -19,7 +19,9 @@ public class Member {
     private Long id;
     @Column(name="member_email")
     private String memberEmail;
-    @Column(name="member_pwd")
+    @Column(name = "member_nickname", unique = true)
+    private String memberNickname;
+    @Column(name = "member_pwd")
     private String memberPwd;
     @OneToMany(fetch=FetchType.LAZY,
             cascade = CascadeType.ALL,

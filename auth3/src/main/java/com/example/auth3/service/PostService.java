@@ -1,5 +1,6 @@
 package com.example.auth3.service;
 
+import com.example.auth3.constant.ItemSellStatus;
 import com.example.auth3.dto.request.PostChangeForm;
 import com.example.auth3.dto.request.PostRequest;
 import com.example.auth3.entity.Post;
@@ -9,7 +10,11 @@ import com.example.auth3.exception.DataNotFoundException;
 import com.example.auth3.exception.ImageUploadException;
 import com.example.auth3.repository.PostRepository;
 import com.example.auth3.repository.MemberRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -18,6 +23,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class PostService {
     private final PostRepository postRepository;
     private final MemberRepository memberRepository;
@@ -52,10 +58,17 @@ public class PostService {
     }
 
 
-    public List<Post> findAllPostByOffset(Long offset, Long limit) {
-        return postRepository.findByIdBetween(offset, limit);
+    public Page<Post> findAllPostByOffset(Long page, Long limit) {
+        Pageable pageable = PageRequest.of(Long.valueOf(page).intValue(), Long.valueOf(limit).intValue());
+        return postRepository.findAll(pageable);
     }
 
 
+    public void changePost(Post post, PostChangeForm form) {
+        post.changePost(form);
+    }
 
+    public void changeSellStatus(Post post, ItemSellStatus sellStatus) {
+        post.changeSellStatus(sellStatus);
+    }
 }

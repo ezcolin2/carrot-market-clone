@@ -15,14 +15,12 @@ import java.util.List;
 @Getter
 public class MemberResponse {
     private String email;
-    private List<InterestResponse> interests;
+    private String memberNickName;
+
+
     public static MemberResponse of (Member member) {
-        List<InterestResponse> interestResponses = new ArrayList<>();
-        for (Interest interest : member.getInterests()) {
-            interestResponses.add(InterestResponse.of(interest, interest.getPost()));//클라이언트에 보내줄 때는 dto 타입으로 변환하여 보내줌
-        }
         return MemberResponse.builder()
                 .email(member.getMemberEmail())
-                .interests(interestResponses).build();
+                .memberNickName(member.getMemberNickname()).build();
     }
 }

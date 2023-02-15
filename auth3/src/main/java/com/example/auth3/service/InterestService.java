@@ -23,7 +23,7 @@ public class InterestService {
 
     public void registerInterest(Post post, Member member) {
         if (interestRepository.findByPostAndMember(post, member).isPresent()){
-            throw new DuplicateException();
+            throw new DuplicateException("이미 등록되어있습니다.");
         }
         Interest newInterest = Interest.builder()
                 .post(post)
@@ -47,6 +47,7 @@ public class InterestService {
             throw new DataNotFoundException("관심 상품이");
         }
         interestRepository.delete(interest.get());
+        post.minusInterests();
     }
 
     public Interest getInterest(Post post, Member member) {

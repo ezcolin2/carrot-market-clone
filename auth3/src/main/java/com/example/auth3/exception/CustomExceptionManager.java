@@ -3,19 +3,16 @@ package com.example.auth3.exception;
 import com.example.auth3.response.JsonResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @RestControllerAdvice
 public class CustomExceptionManager {
-    @ExceptionHandler(DuplicatedUserIdException.class)
-    public ResponseEntity<JsonResponse> duplicatedUserIdException(DuplicatedUserIdException e) {
-        JsonResponse res = JsonResponse.builder()
-                .code(HttpStatus.CONFLICT.value())
-                .httpStatus(HttpStatus.CONFLICT)
-                .message(e.getMessage()).build();
-        return new ResponseEntity<>(res, res.getHttpStatus());
-    }
 
     @ExceptionHandler(WrongUserPasswordException.class)
     public ResponseEntity<JsonResponse> wrongUserPasswordrException(WrongUserPasswordException e) {
@@ -45,6 +42,7 @@ public class CustomExceptionManager {
                 .message(e.getMessage()).build();
         return new ResponseEntity<>(res, res.getHttpStatus());
     }
+
     @ExceptionHandler(NoImageUploadException.class)
     public ResponseEntity<JsonResponse> noImageUploadException(NoImageUploadException e) {
         JsonResponse res = JsonResponse.builder()
@@ -53,6 +51,7 @@ public class CustomExceptionManager {
                 .message(e.getMessage()).build();
         return new ResponseEntity<>(res, res.getHttpStatus());
     }
+
     @ExceptionHandler(DuplicateException.class)
     public ResponseEntity<JsonResponse> duplicateException(DuplicateException e) {
         JsonResponse res = JsonResponse.builder()
@@ -60,4 +59,27 @@ public class CustomExceptionManager {
                 .httpStatus(HttpStatus.CONFLICT)
                 .message(e.getMessage()).build();
         return new ResponseEntity<>(res, res.getHttpStatus());
-    }}
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<JsonResponse> requestException(MethodArgumentNotValidException e) {
+        Map<String, String> errors = new HashMap<>();
+        e.getBindingResult().getAllErrors()
+                .forEach(c -> errors.put(((FieldError) c).getField(), c.getDefaultMessage()));
+        JsonResponse res = JsonResponse.builder()
+                .code(HttpStatus.BAD_REQUEST.value())
+                .httpStatus(HttpStatus.BAD_REQUEST)
+                .message("올바른 요청이 아닙니다")
+                .data(errors).build();
+        return new ResponseEntity<>(res, res.getHttpStatus());
+    }
+    @ExceptionHandler(PwdConfirmNotEqualException.class)
+    public ResponseEntity<JsonResponse> pwdConfirmException(PwdConfirmNotEqualException e) {
+        JsonResponse res = JsonResponse.builder()
+                .code(HttpStatus.BAD_REQUEST.value())
+                .httpStatus(HttpStatus.BAD_REQUEST)
+                .message(e.getMessage()).build();
+        return new ResponseEntity<>(res, res.getHttpStatus());
+    }
+
+}

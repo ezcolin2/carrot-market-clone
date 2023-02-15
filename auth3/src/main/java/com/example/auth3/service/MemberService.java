@@ -1,8 +1,10 @@
 package com.example.auth3.service;
 
+import com.example.auth3.dto.request.MemberJoinRequest;
 import com.example.auth3.entity.Member;
-import com.example.auth3.exception.DuplicatedUserIdException;
+import com.example.auth3.exception.DuplicateException;
 import com.example.auth3.exception.DataNotFoundException;
+import com.example.auth3.exception.PwdConfirmNotEqualException;
 import com.example.auth3.exception.WrongUserPasswordException;
 import com.example.auth3.repository.MemberRepository;
 import com.example.auth3.util.JwtUtil;
@@ -23,13 +25,20 @@ public class MemberService {
     @Value("${jwt.expiredMs}")
     private Long expiredMs;
 
-    public String join(String memberEmail, String memberPwd) {
-        if (memberRepository.findByMemberEmail(memberEmail).isPresent()){
-            throw new DuplicatedUserIdException();
+    public String join(MemberJoinRequest member) {
+        if (memberRepository.findByMemberEmail(member.getUserEmail()).isPresent()){
+            throw new DuplicateException("이메일 중복");
+        }
+        if (memberRepository.findByMemberNickname(member.getUserNickName()).isPresent()){
+            throw new DuplicateException("별명 중복");
+        }
+        if (!member.getUserPwd().equals(member.getUserPwdConfirm())) {
+            throw new PwdConfirmNotEqualException();
         }
         Member newMember = Member.builder()
-                        .memberEmail(memberEmail)
-                                .memberPwd(encoder.encode(memberPwd)).build();
+                        .memberEmail(member.getUserEmail())
+                        .memberNickname(member.getUserNickName())
+                        .memberPwd(encoder.encode(member.getUserPwd())).build();
         memberRepository.save(newMember);
         return "회원가입 성공!";
     }

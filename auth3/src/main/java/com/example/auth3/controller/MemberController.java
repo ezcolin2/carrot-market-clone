@@ -4,18 +4,15 @@ import com.example.auth3.dto.response.MyInterestResponse;
 import com.example.auth3.dto.response.PostResponseDto;
 import com.example.auth3.dto.response.TokenResponse;
 import com.example.auth3.dto.request.MemberJoinRequest;
-import com.example.auth3.dto.response.MemberResponse;
 import com.example.auth3.entity.Interest;
 import com.example.auth3.entity.Member;
 import com.example.auth3.entity.Post;
 import com.example.auth3.response.JsonResponse;
 import com.example.auth3.service.MemberService;
-import lombok.Builder;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.apache.tomcat.util.http.parser.Authorization;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,8 +27,8 @@ public class MemberController {
     private final MemberService memberService;
 
     @PostMapping("/join")
-    public ResponseEntity<JsonResponse> join(@RequestBody MemberJoinRequest user) {
-        String message = memberService.join(user.getUserId(), user.getUserPwd());
+    public ResponseEntity<JsonResponse> join(@Valid @RequestBody MemberJoinRequest user) {
+        String message = memberService.join(user);
 
         JsonResponse res = JsonResponse.builder()
                 .code(HttpStatus.OK.value())
@@ -43,7 +40,7 @@ public class MemberController {
 
     @PostMapping("/login")
     public ResponseEntity<JsonResponse> login(@RequestBody MemberJoinRequest user) {
-        String token = memberService.login(user.getUserId(), user.getUserPwd());
+        String token = memberService.login(user.getUserEmail(), user.getUserPwd());
         JsonResponse response = JsonResponse.builder()
                 .code(HttpStatus.OK.value())
                 .message("로그인 성공")

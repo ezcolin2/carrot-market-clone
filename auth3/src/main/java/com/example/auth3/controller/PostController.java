@@ -3,19 +3,25 @@ package com.example.auth3.controller;
 import com.example.auth3.constant.ItemSellStatus;
 import com.example.auth3.dto.request.PostChangeForm;
 import com.example.auth3.dto.request.PostRequest;
+import com.example.auth3.dto.response.PostResponseDto;
 import com.example.auth3.entity.Post;
 import com.example.auth3.dto.response.PostCountResponse;
 import com.example.auth3.entity.Member;
 import com.example.auth3.response.JsonResponse;
 import com.example.auth3.service.PostService;
 import com.example.auth3.service.MemberService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -27,24 +33,29 @@ public class PostController {
 
     @GetMapping("")
     public ResponseEntity<JsonResponse> getAllPostByOffset(
-            @RequestParam(name = "offset") Long offset,
+            @RequestParam(name = "page") Long page,
             @RequestParam(name = "limit") Long limit
     ) {
-        List<Post> posts = postService.findAllPostByOffset(offset, offset + limit - 1);
+        List<PostResponseDto> postDtoList = new ArrayList<>();
+        Page<Post> posts = postService.findAllPostByOffset(page, limit);
+        for (Post post : posts) {
+            postDtoList.add(PostResponseDto.of(post));
+        }
 
         JsonResponse response = JsonResponse.builder()
                 .code(HttpStatus.OK.value())
                 .httpStatus(HttpStatus.OK)
                 .message("게시글 가져오기 성공")
-                .data(posts).build();
+                .data(postDtoList).build();
         return new ResponseEntity<>(response, response.getHttpStatus());
     }
 
     @PostMapping("")
     public ResponseEntity<JsonResponse> registerPost(
-            @RequestPart(value = "post", required = true) PostRequest post,
+            @Valid @RequestPart(value = "post", required = true) PostRequest post,
             @RequestPart(value = "image", required = true) List<MultipartFile> image
     ) {
+
 
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         Member findMember = memberService.getMemberByUserEmail(email);
@@ -78,13 +89,13 @@ public class PostController {
         return new ResponseEntity<>(response, response.getHttpStatus());
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/{id}/status")
     public ResponseEntity<JsonResponse> changeItemSellStatus(
             @PathVariable("id") Long id,
             @RequestParam ItemSellStatus sellStatus
     ) {
         Post post = postService.getPost(id);
-        post.changeSellStatus(sellStatus);
+        postService.changeSellStatus(post, sellStatus);
         JsonResponse response = JsonResponse.builder()
                 .code(HttpStatus.OK.value())
                 .httpStatus(HttpStatus.OK)
@@ -95,9 +106,9 @@ public class PostController {
     @PutMapping("/{id}")
     public ResponseEntity<JsonResponse> changePost(
             @PathVariable("id") Long id,
-            PostChangeForm form) {
+            @RequestBody PostChangeForm form) {
         Post post = postService.getPost(id);
-        post.changePost(form);
+        postService.changePost(post, form);
 
         JsonResponse response = JsonResponse.builder()
                 .code(HttpStatus.OK.value())

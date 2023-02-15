@@ -1,8 +1,9 @@
 package com.example.auth3.service;
 
+import com.example.auth3.dto.request.MemberJoinRequest;
 import com.example.auth3.entity.Member;
 import com.example.auth3.exception.DataNotFoundException;
-import com.example.auth3.exception.DuplicatedUserIdException;
+import com.example.auth3.exception.DuplicateException;
 import com.example.auth3.repository.MemberRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -53,11 +54,9 @@ public class MemberServiceTest {
         newMember.setMemberPwd("testMember");
         join(newMember);
 
-        Member newMember2 = new Member();
-        newMember2.setMemberEmail("testMember");
-        newMember2.setMemberPwd("testMember");
-        assertThrows(DuplicatedUserIdException.class,
-                ()-> memberService.join(newMember2.getMemberEmail(), newMember2.getMemberPwd())
+        MemberJoinRequest newMember2 = new MemberJoinRequest("testMember", "testPwd", "testPwd","nickname");
+        assertThrows(DuplicateException.class,
+                ()-> memberService.join(newMember2)
         );
 
     }
