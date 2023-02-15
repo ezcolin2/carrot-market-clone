@@ -1,5 +1,6 @@
 package com.example.auth3.service;
 
+import com.example.auth3.dto.request.PostChangeForm;
 import com.example.auth3.dto.request.PostRequest;
 import com.example.auth3.entity.Post;
 import com.example.auth3.entity.Member;
@@ -54,6 +55,7 @@ public class PostService {
     public List<Post> findAllPostByOffset(Long offset, Long limit) {
         return postRepository.findByIdBetween(offset, limit);
     }
+
 
 
 }

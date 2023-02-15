@@ -1,6 +1,7 @@
 package com.example.auth3.entity;
 
 import com.example.auth3.constant.ItemSellStatus;
+import com.example.auth3.dto.request.PostChangeForm;
 import com.example.auth3.dto.request.PostRequest;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
@@ -60,6 +61,16 @@ public class Post extends BaseTime{
                 .content(post.getContent())
                 .region(post.getRegion())
                 .price(post.getPrice()).build();
+    }
+
+    public void changeSellStatus(ItemSellStatus status) {
+        this.sellStatus=status;
+    }
+
+    public void changePost(PostChangeForm form) {
+        this.postTitle=form.getPostTitle();
+        this.content=form.getContent();
+        this.price=form.getPrice();
     }
 
 
