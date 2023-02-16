@@ -9,6 +9,7 @@ import com.example.auth3.exception.DuplicateException;
 import com.example.auth3.repository.InterestRepository;
 import com.example.auth3.repository.PostRepository;
 import com.example.auth3.repository.MemberRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +17,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class InterestService {
     private final InterestRepository interestRepository;
     private final PostRepository postRepository;
