@@ -63,6 +63,11 @@ public class PostService {
         return postRepository.findAll(pageable);
     }
 
+    public List<Post> findByPostTitle(String title) {
+        List<Post> posts = postRepository.findByTitle(title);
+        return posts;
+    }
+
 
     public void changePost(Post post, PostChangeForm form) {
         post.changePost(form);

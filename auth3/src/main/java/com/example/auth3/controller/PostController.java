@@ -50,6 +50,16 @@ public class PostController {
         return new ResponseEntity<>(response, response.getHttpStatus());
     }
 
+    @GetMapping("/search")
+    public ResponseEntity<JsonResponse> searchPostByTitle(@RequestParam(name = "title") String title) {
+        List<Post> byPostTitle = postService.findByPostTitle(title);
+        JsonResponse response = JsonResponse.builder()
+                .code(HttpStatus.OK.value())
+                .httpStatus(HttpStatus.OK)
+                .message("게시글 가져오기 성공")
+                .data(byPostTitle).build();
+        return new ResponseEntity<>(response, response.getHttpStatus());
+    }
     @PostMapping("")
     public ResponseEntity<JsonResponse> registerPost(
             @Valid @RequestPart(value = "post", required = true) PostRequest post,
