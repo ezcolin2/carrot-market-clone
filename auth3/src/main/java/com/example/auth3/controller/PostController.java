@@ -3,6 +3,7 @@ package com.example.auth3.controller;
 import com.example.auth3.constant.ItemSellStatus;
 import com.example.auth3.dto.request.PostChangeForm;
 import com.example.auth3.dto.request.PostRequest;
+import com.example.auth3.dto.response.PostDetailResponse;
 import com.example.auth3.dto.response.PostResponseDto;
 import com.example.auth3.entity.Post;
 import com.example.auth3.dto.response.PostCountResponse;
@@ -80,11 +81,12 @@ public class PostController {
     @GetMapping("/{id}")
     public ResponseEntity<JsonResponse> getPost(@PathVariable("id") Long id) {
         Post post = postService.getPost(id);
+        PostDetailResponse res = PostDetailResponse.of(post);
         JsonResponse response = JsonResponse.builder()
                 .code(HttpStatus.OK.value())
                 .httpStatus(HttpStatus.OK)
                 .message("게시글 가져오기 성공")
-                .data(post).build();
+                .data(res).build();
         return new ResponseEntity<>(response, response.getHttpStatus());
     }
 

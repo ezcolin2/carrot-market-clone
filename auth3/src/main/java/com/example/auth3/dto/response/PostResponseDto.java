@@ -14,8 +14,6 @@ import lombok.NoArgsConstructor;
 @Getter
 public class PostResponseDto {
     private Long id;
-    private String memberEmail;
-    private String memberNickName;
     private String postTitle;
     private String content;
     private String region;
@@ -29,8 +27,6 @@ public class PostResponseDto {
     public static PostResponseDto of(Post post) {
         return PostResponseDto.builder()
                 .id(post.getId())
-                .memberEmail(post.getMember().getMemberEmail())
-                .memberNickName(post.getMember().getMemberNickname())
                 .postTitle(post.getPostTitle())
                 .content(post.getContent())
                 .region(post.getRegion())
