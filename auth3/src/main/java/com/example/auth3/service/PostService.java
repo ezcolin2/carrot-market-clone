@@ -5,7 +5,6 @@ import com.example.auth3.dto.request.PostChangeForm;
 import com.example.auth3.dto.request.PostRequest;
 import com.example.auth3.entity.Post;
 import com.example.auth3.entity.Member;
-import com.example.auth3.etc.ImageSave;
 import com.example.auth3.exception.DataNotFoundException;
 import com.example.auth3.exception.ImageUploadException;
 import com.example.auth3.repository.PostRepository;
@@ -27,6 +26,7 @@ import java.util.Optional;
 public class PostService {
     private final PostRepository postRepository;
     private final MemberRepository memberRepository;
+    private final ImageS3Service imageService;
 
     public Post registerPost(PostRequest post, List<MultipartFile> image, Member member) {
         if (image == null) {
@@ -37,7 +37,7 @@ public class PostService {
 //        List<Image> list = new ArrayList<>();
         for (MultipartFile multipartFile : image) {
 //            list.add(ImageSave.uploadImage(multipartFile));
-            newPost.getImages().add(ImageSave.uploadImage(multipartFile, newPost));
+            newPost.getImages().add(imageService.uploadImage(multipartFile, newPost));
 
         }
 
