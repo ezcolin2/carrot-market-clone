@@ -29,6 +29,7 @@ public class SecurityConfig {
                 .authorizeRequests()
 //                .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/posts").authenticated()
+                .requestMatchers(HttpMethod.DELETE, "/api/posts").authenticated()
                 .requestMatchers(HttpMethod.DELETE, "/api/users").authenticated()
                 .requestMatchers(HttpMethod.GET, "/api/users/**").authenticated()
                 .requestMatchers("/api/users/token/**").authenticated()

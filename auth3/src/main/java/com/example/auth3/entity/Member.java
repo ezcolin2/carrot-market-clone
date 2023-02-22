@@ -24,8 +24,7 @@ public class Member {
     @Column(name = "member_pwd")
     private String memberPwd;
     @OneToMany(fetch=FetchType.LAZY,
-            cascade = CascadeType.ALL,
-            orphanRemoval = true,
+            cascade = CascadeType.PERSIST,
     mappedBy = "member")
     @Builder.Default
     private List<Post> post = new ArrayList<>();

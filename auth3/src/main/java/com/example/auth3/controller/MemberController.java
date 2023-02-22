@@ -84,7 +84,7 @@ public class MemberController {
     public ResponseEntity<JsonResponse> deleteMember(){
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         Member member = memberService.getMemberByUserEmail(email);
-        memberService.deleteByEmail(member.getId());
+        memberService.deleteById(member.getId());
         JsonResponse response = JsonResponse.builder()
                 .code(HttpStatus.OK.value())
                 .httpStatus(HttpStatus.OK)

@@ -1,5 +1,6 @@
 package com.example.auth3.entity;
 
+import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -7,6 +8,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.yaml.snakeyaml.events.Event;
+
+import java.io.File;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -27,4 +30,9 @@ public class Image {
     private String originName;
     @Column(name="stored_image_path")
     private String storedImagePath;
+
+    public void deleteImageFromStorage() {
+        String key = storedImagePath.substring(storedImagePath.lastIndexOf(File.separator));
+
+    }
 }

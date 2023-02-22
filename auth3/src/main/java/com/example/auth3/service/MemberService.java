@@ -2,6 +2,7 @@ package com.example.auth3.service;
 
 import com.example.auth3.dto.request.MemberJoinRequest;
 import com.example.auth3.entity.Member;
+import com.example.auth3.entity.Post;
 import com.example.auth3.exception.DuplicateException;
 import com.example.auth3.exception.DataNotFoundException;
 import com.example.auth3.exception.PwdConfirmNotEqualException;
@@ -13,6 +14,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -72,7 +74,12 @@ public class MemberService {
         return findMember.get();
     }
 
-    public void deleteByEmail(Long id) {
+    public void deleteById(Long id) {
+        Optional<Member> member = memberRepository.findById(id);
+        List<Post> posts = member.get().getPost();
+        for (Post post : posts) {
+            post.setMember(null);
+        }
         memberRepository.deleteById(id);
     }
 

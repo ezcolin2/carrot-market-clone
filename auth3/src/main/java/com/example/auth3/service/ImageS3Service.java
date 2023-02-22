@@ -1,10 +1,7 @@
 package com.example.auth3.service;
 
 import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.model.CannedAccessControlList;
-import com.amazonaws.services.s3.model.ObjectMetadata;
-import com.amazonaws.services.s3.model.PutObjectRequest;
-import com.amazonaws.services.s3.model.PutObjectResult;
+import com.amazonaws.services.s3.model.*;
 import com.example.auth3.entity.Image;
 import com.example.auth3.entity.Post;
 import com.example.auth3.exception.ImageUploadException;
@@ -22,42 +19,46 @@ import java.util.UUID;
 public class ImageS3Service{
     private final AmazonS3 amazonS3;
     @Value("${cloud.aws.s3.bucketName}")
-    private String bucketName;
-    private String changedImageName(String originName) {
+    private String bucketName; //버킷 이름
+    private String changedImageName(String originName) { //이미지 이름 중복 방지를 위해 랜덤으로 생성
         String random = UUID.randomUUID().toString();
         return random+originName;
+    }
+
+    private String uploadImageToS3(MultipartFile image) { //이미지를 S3에 업로드하고 이미지의 url을 반환
+        String originName = image.getOriginalFilename(); //원본 이미지 이름
+        String ext = originName.substring(originName.lastIndexOf(".")+1); //확장자
+        String changedName = changedImageName(originName); //새로 생성된 이미지 이름
+        ObjectMetadata metadata = new ObjectMetadata(); //메타데이터
+        metadata.setContentType("image/"+ext);
+        try {
+            PutObjectResult putObjectResult = amazonS3.putObject(new PutObjectRequest(
+                    bucketName, changedName, image.getInputStream(), metadata
+            ).withCannedAcl(CannedAccessControlList.PublicRead));
+
+        } catch (IOException e) {
+            throw new ImageUploadException(); //커스텀 예외 던짐.
+        }
+        return amazonS3.getUrl(bucketName, changedName).toString(); //데이터베이스에 저장할 이미지가 저장된 주소
+
     }
 
 
     public Image uploadImage(MultipartFile image, Post post){
         String originName = image.getOriginalFilename();
-        String changedName = changedImageName(originName);
-        ObjectMetadata metadata = new ObjectMetadata();
-        metadata.setContentType("image/"+originName.split("\\.")[1]);
-        System.out.println(metadata.getContentType());
-        try {
-            PutObjectResult putObjectResult = amazonS3.putObject(new PutObjectRequest(
-                    bucketName, changedName, image.getInputStream(), metadata
-            ).withCannedAcl(CannedAccessControlList.PublicRead));
-            System.out.println("putObjectResult = " + putObjectResult.getContentMd5());
+        String storedImagePath = uploadImageToS3(image);
 
-        } catch (IOException e) {
-            System.out.println("e.getMessage() = " + e.getMessage());
-        }
-        String storedImagePath = amazonS3.getUrl(bucketName, changedName).toString();
-        System.out.println("storedImagePath = " + storedImagePath);
-
-//        try {
-//            image.transferTo(new File(storedImagePath));
-//        } catch (IOException e){
-//            throw new ImageUploadException();
-//
-//        }
-        Image newImage = Image.builder()
+        Image newImage = Image.builder() //이미지에 대한 정보를 담아서 반환
                 .originName(originName)
                 .storedImagePath(storedImagePath)
                 .post(post).build();
         return newImage;
+    }
+
+    public void deleteImage(String key) {
+        System.out.println("key = " + key);
+        DeleteObjectRequest deleteRequest = new DeleteObjectRequest(bucketName, key);
+        amazonS3.deleteObject(deleteRequest);
     }
 
 }

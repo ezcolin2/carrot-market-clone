@@ -35,7 +35,10 @@ public class Post extends BaseTime{
     private String region;
     @Column(name="price")
     private int price;//int 사용시 값 설정을 하지 않으면 0으로 됨
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, fetch=FetchType.LAZY, orphanRemoval = true)
+    @OneToMany(mappedBy = "post",
+            cascade = CascadeType.ALL,
+            fetch=FetchType.LAZY,
+            orphanRemoval = true)
     @Builder.Default
     private List<Image> images = new ArrayList<>();
     private int chats;

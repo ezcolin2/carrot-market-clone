@@ -3,6 +3,7 @@ package com.example.auth3.service;
 import com.example.auth3.constant.ItemSellStatus;
 import com.example.auth3.dto.request.PostChangeForm;
 import com.example.auth3.dto.request.PostRequest;
+import com.example.auth3.entity.Image;
 import com.example.auth3.entity.Post;
 import com.example.auth3.entity.Member;
 import com.example.auth3.exception.DataNotFoundException;
@@ -17,6 +18,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,6 +29,7 @@ public class PostService {
     private final PostRepository postRepository;
     private final MemberRepository memberRepository;
     private final ImageS3Service imageService;
+
 
     public Post registerPost(PostRequest post, List<MultipartFile> image, Member member) {
         if (image == null) {
@@ -76,4 +79,16 @@ public class PostService {
     public void changeSellStatus(Post post, ItemSellStatus sellStatus) {
         post.changeSellStatus(sellStatus);
     }
+
+    public void deletePostById(Long id) {//S3에 존재하는 이미지 전부 삭제하고 레포지토리에서 삭제
+        Post post = getPost(id);
+        List<Image> images = post.getImages();
+        for (Image image : images) {
+            String storedImagePath = image.getStoredImagePath();
+            String key = storedImagePath.substring(storedImagePath.lastIndexOf("/")+1);
+            imageService.deleteImage(key);
+        }
+        postRepository.deleteById(id);
+    }
+
 }

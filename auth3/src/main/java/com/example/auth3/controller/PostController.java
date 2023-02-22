@@ -90,8 +90,18 @@ public class PostController {
         return new ResponseEntity<>(response, response.getHttpStatus());
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<JsonResponse> deletePost(@PathVariable("id") Long id) {
+        postService.deletePostById(id);
+        JsonResponse response = JsonResponse.builder()
+                .code(HttpStatus.OK.value())
+                .httpStatus(HttpStatus.OK)
+                .message("게시글 삭제 성공").build();
+        return new ResponseEntity<>(response, response.getHttpStatus());
+    }
     @GetMapping("/count")
     public ResponseEntity<JsonResponse> getPostCount() {
+
         PostCountResponse count = new PostCountResponse(postService.getPostCount());
         JsonResponse response = JsonResponse.builder()
                 .code(HttpStatus.OK.value())
