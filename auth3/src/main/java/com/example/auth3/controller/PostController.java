@@ -2,6 +2,7 @@ package com.example.auth3.controller;
 
 import com.example.auth3.constant.ItemSellStatus;
 import com.example.auth3.dto.request.PostChangeForm;
+import com.example.auth3.dto.request.PostModifyRequest;
 import com.example.auth3.dto.request.PostRequest;
 import com.example.auth3.dto.response.PostDetailResponse;
 import com.example.auth3.dto.response.PostResponseDto;
@@ -9,6 +10,7 @@ import com.example.auth3.entity.Post;
 import com.example.auth3.dto.response.PostCountResponse;
 import com.example.auth3.entity.Member;
 import com.example.auth3.response.JsonResponse;
+import com.example.auth3.service.ImageS3Service;
 import com.example.auth3.service.PostService;
 import com.example.auth3.service.MemberService;
 import jakarta.validation.Valid;
@@ -33,6 +35,7 @@ public class PostController {
     private final MemberService memberService;
 
     @GetMapping("")
+
     public ResponseEntity<JsonResponse> getAllPostByOffset(
             @RequestParam(name = "page") Long page,
             @RequestParam(name = "limit") Long limit
@@ -61,6 +64,7 @@ public class PostController {
                 .data(byPostTitle).build();
         return new ResponseEntity<>(response, response.getHttpStatus());
     }
+
     @PostMapping("")
     public ResponseEntity<JsonResponse> registerPost(
             @Valid @RequestPart(value = "post", required = true) PostRequest post,
@@ -99,6 +103,7 @@ public class PostController {
                 .message("게시글 삭제 성공").build();
         return new ResponseEntity<>(response, response.getHttpStatus());
     }
+
     @GetMapping("/count")
     public ResponseEntity<JsonResponse> getPostCount() {
 
@@ -125,13 +130,13 @@ public class PostController {
         return new ResponseEntity<>(response, response.getHttpStatus());
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/{id}") //게시글 수정. 바뀐 이미지만 받는다. 삭제된 이미지의 url을 받아와서 key를 추출해서 s3에 존재하는 이미지를 삭제한다.
     public ResponseEntity<JsonResponse> changePost(
             @PathVariable("id") Long id,
-            @RequestBody PostChangeForm form) {
+            @RequestPart PostModifyRequest form,
+            @RequestPart List<MultipartFile> image){
         Post post = postService.getPost(id);
-        postService.changePost(post, form);
-
+        postService.changePost(post, form, image); //이미지를 제외한 게시글 내용 수정
         JsonResponse response = JsonResponse.builder()
                 .code(HttpStatus.OK.value())
                 .httpStatus(HttpStatus.OK)

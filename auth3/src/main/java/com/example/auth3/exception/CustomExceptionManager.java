@@ -82,4 +82,12 @@ public class CustomExceptionManager {
                 .message(e.getMessage()).build();
         return new ResponseEntity<>(res, res.getHttpStatus());
     }
+    @ExceptionHandler(ImageChangeException.class)
+    public ResponseEntity<JsonResponse> imageChangeException(ImageChangeException e) {
+        JsonResponse res = JsonResponse.builder()
+                .code(HttpStatus.BAD_REQUEST.value())
+                .httpStatus(HttpStatus.BAD_REQUEST)
+                .message(e.getMessage()).build();
+        return new ResponseEntity<>(res, res.getHttpStatus());
+    }
 }

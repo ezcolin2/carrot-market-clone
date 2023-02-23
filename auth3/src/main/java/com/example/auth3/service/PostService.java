@@ -2,11 +2,13 @@ package com.example.auth3.service;
 
 import com.example.auth3.constant.ItemSellStatus;
 import com.example.auth3.dto.request.PostChangeForm;
+import com.example.auth3.dto.request.PostModifyRequest;
 import com.example.auth3.dto.request.PostRequest;
 import com.example.auth3.entity.Image;
 import com.example.auth3.entity.Post;
 import com.example.auth3.entity.Member;
 import com.example.auth3.exception.DataNotFoundException;
+import com.example.auth3.exception.ImageChangeException;
 import com.example.auth3.exception.ImageUploadException;
 import com.example.auth3.repository.PostRepository;
 import com.example.auth3.repository.MemberRepository;
@@ -15,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -62,7 +65,7 @@ public class PostService {
 
 
     public Page<Post> findAllPostByOffset(Long page, Long limit) {
-        Pageable pageable = PageRequest.of(Long.valueOf(page).intValue(), Long.valueOf(limit).intValue());
+        Pageable pageable = PageRequest.of(Long.valueOf(page).intValue(), Long.valueOf(limit).intValue(), Sort.by("id").descending());
         return postRepository.findAll(pageable);
     }
 
@@ -72,7 +75,25 @@ public class PostService {
     }
 
 
-    public void changePost(Post post, PostChangeForm form) {
+    public void changePost(Post post, PostModifyRequest form, List<MultipartFile> images) {
+        List<String> urls = form.getImageUrlListForDelete();
+        if (post.getImages().size() - urls.size() + images.size() < 1) {
+            throw new ImageChangeException();
+        }
+
+        //삭제된 이미지를 모두 삭제. url만 넘겨주면 알아서 key로 변환 후 s3에서 삭제
+        imageService.deleteImage(urls);
+        post.getImages().removeIf(
+                e -> urls.contains(e.getStoredImagePath())
+        );
+
+        //새로운 이미지 업로드
+        for (MultipartFile image : images) {
+            post.getImages().add(imageService.uploadImage(image, post));
+
+            imageService.uploadImage(image, post);
+        }
+        //이미지를 제외한 다른 내용은 엄데이트
         post.changePost(form);
     }
 

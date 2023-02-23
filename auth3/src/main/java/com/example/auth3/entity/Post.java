@@ -1,7 +1,7 @@
 package com.example.auth3.entity;
 
 import com.example.auth3.constant.ItemSellStatus;
-import com.example.auth3.dto.request.PostChangeForm;
+import com.example.auth3.dto.request.PostModifyRequest;
 import com.example.auth3.dto.request.PostRequest;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
@@ -70,10 +70,16 @@ public class Post extends BaseTime{
         this.sellStatus=status;
     }
 
-    public void changePost(PostChangeForm form) {
+    public void changePost(PostModifyRequest form) { //수정할 때 삭제한 이미지의 url을 전부 삭제함
         this.postTitle=form.getPostTitle();
         this.content=form.getContent();
         this.price=form.getPrice();
+        List<String> urls = form.getImageUrlListForDelete();
+
+        this.images.removeIf( //이미지를 삭제
+                e -> urls.contains(e.getStoredImagePath())
+        );
+
     }
 
 
