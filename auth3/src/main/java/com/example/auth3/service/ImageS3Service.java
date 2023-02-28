@@ -57,17 +57,9 @@ public class ImageS3Service{
     }
 
     public void deleteImage(String key) {
-        System.out.println("key = " + key);
         DeleteObjectRequest deleteRequest = new DeleteObjectRequest(bucketName, key);
         amazonS3.deleteObject(deleteRequest);
     }
-    public void deleteImage(List<String> urls) {//여러 url을 받으면 key로 변환 후 s3에서 삭제
-        for (String url : urls) {
-            String key = url.substring(url.lastIndexOf("/") + 1);
-            DeleteObjectRequest deleteRequest = new DeleteObjectRequest(bucketName, key);
-            amazonS3.deleteObject(deleteRequest);
 
-        }
-    }
 
 }

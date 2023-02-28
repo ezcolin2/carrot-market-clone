@@ -9,6 +9,7 @@ import com.example.auth3.exception.PwdConfirmNotEqualException;
 import com.example.auth3.exception.WrongUserPasswordException;
 import com.example.auth3.repository.MemberRepository;
 import com.example.auth3.util.JwtUtil;
+import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;

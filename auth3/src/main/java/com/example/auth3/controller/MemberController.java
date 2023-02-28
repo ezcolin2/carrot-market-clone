@@ -9,6 +9,7 @@ import com.example.auth3.entity.Member;
 import com.example.auth3.entity.Post;
 import com.example.auth3.response.JsonResponse;
 import com.example.auth3.service.MemberService;
+import jakarta.persistence.EntityManager;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -55,9 +56,12 @@ public class MemberController {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         Member user = memberService.getMemberByUserEmail(email);
         List<PostResponseDto> posts = new ArrayList<>();
-        for (Post post : user.getPost()) {
+        List<Post> realPosts = user.getPost();
+
+        for (Post post : realPosts) {
             posts.add(PostResponseDto.of(post));
         }
+
         JsonResponse response = JsonResponse.builder()
                 .code(HttpStatus.OK.value())
                 .httpStatus(HttpStatus.OK)

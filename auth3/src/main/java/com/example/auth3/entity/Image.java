@@ -31,8 +31,4 @@ public class Image {
     @Column(name="stored_image_path")
     private String storedImagePath;
 
-    public void deleteImageFromStorage() {
-        String key = storedImagePath.substring(storedImagePath.lastIndexOf(File.separator));
-
-    }
 }

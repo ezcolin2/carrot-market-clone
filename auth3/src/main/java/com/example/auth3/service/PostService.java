@@ -1,5 +1,6 @@
 package com.example.auth3.service;
 
+import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.example.auth3.constant.ItemSellStatus;
 import com.example.auth3.dto.request.PostChangeForm;
 import com.example.auth3.dto.request.PostModifyRequest;
@@ -58,6 +59,7 @@ public class PostService {
         post.get().updateVisits();
         return post.get();
     }
+
     public int getPostCount() {
         return Long.valueOf(postRepository.count()).intValue();
 
@@ -69,8 +71,17 @@ public class PostService {
         return postRepository.findAll(pageable);
     }
 
-    public List<Post> findByPostTitle(String title) {
-        List<Post> posts = postRepository.findByTitle(title);
+    public List<Post> findMyPost(Long id, Long page, Long limit) {
+
+        return postRepository.findByUserId(id, page, limit);
+    }
+    public List<Post> findMyInterest(Long id, Long page, Long limit) {
+
+        return postRepository.findByWriterEmail(id, page, limit);
+    }
+
+    public List<Post> findByPostTitle(String title,Long page, Long limit) {
+        List<Post> posts = postRepository.findByTitle(title, page*limit, limit);
         return posts;
     }
 
@@ -81,8 +92,12 @@ public class PostService {
             throw new ImageChangeException();
         }
 
-        //삭제된 이미지를 모두 삭제. url만 넘겨주면 알아서 key로 변환 후 s3에서 삭제
-        imageService.deleteImage(urls);
+        //삭제된 이미지를 모두 삭제.
+        for (String url : urls) {
+            String key = url.substring(url.lastIndexOf("/") + 1);
+            imageService.deleteImage(key);
+
+        }
         post.getImages().removeIf(
                 e -> urls.contains(e.getStoredImagePath())
         );

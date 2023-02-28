@@ -6,6 +6,7 @@ import com.example.auth3.dto.request.PostRequest;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.web.servlet.DispatcherServlet;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -82,5 +83,5 @@ public class Post extends BaseTime{
 
     }
 
-
 }
+

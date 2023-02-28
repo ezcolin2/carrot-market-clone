@@ -34,8 +34,7 @@ public class PostController {
     private final PostService postService;
     private final MemberService memberService;
 
-    @GetMapping("")
-
+    @GetMapping
     public ResponseEntity<JsonResponse> getAllPostByOffset(
             @RequestParam(name = "page") Long page,
             @RequestParam(name = "limit") Long limit
@@ -54,14 +53,63 @@ public class PostController {
         return new ResponseEntity<>(response, response.getHttpStatus());
     }
 
-    @GetMapping("/search")
-    public ResponseEntity<JsonResponse> searchPostByTitle(@RequestParam(name = "title") String title) {
-        List<Post> byPostTitle = postService.findByPostTitle(title);
+    @GetMapping("/myself")
+    public ResponseEntity<JsonResponse> getMyPost(
+            @RequestParam(name = "page") Long page,
+            @RequestParam(name = "limit") Long limit
+    ) {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        Long id = memberService.getMemberByUserEmail(email).getId();
+        List<PostResponseDto> postDtoList = new ArrayList<>();
+        List<Post> posts = postService.findMyPost(id, page, limit);
+        for (Post post : posts) {
+            postDtoList.add(PostResponseDto.of(post));
+        }
+
         JsonResponse response = JsonResponse.builder()
                 .code(HttpStatus.OK.value())
                 .httpStatus(HttpStatus.OK)
                 .message("게시글 가져오기 성공")
-                .data(byPostTitle).build();
+                .data(postDtoList).build();
+        return new ResponseEntity<>(response, response.getHttpStatus());
+    }
+    @GetMapping("/myself/interests")
+    public ResponseEntity<JsonResponse> getMyInterest(
+            @RequestParam(name = "page") Long page,
+            @RequestParam(name = "limit") Long limit
+    ) {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        Long id = memberService.getMemberByUserEmail(email).getId();
+        List<PostResponseDto> postDtoList = new ArrayList<>();
+        List<Post> posts = postService.findMyInterest(id, page, limit);
+        for (Post post : posts) {
+            postDtoList.add(PostResponseDto.of(post));
+        }
+
+        JsonResponse response = JsonResponse.builder()
+                .code(HttpStatus.OK.value())
+                .httpStatus(HttpStatus.OK)
+                .message("게시글 가져오기 성공")
+                .data(postDtoList).build();
+        return new ResponseEntity<>(response, response.getHttpStatus());
+    }
+
+        @GetMapping("/search")
+    public ResponseEntity<JsonResponse> searchPostByTitle(
+            @RequestParam(name = "title") String title,
+            @RequestParam(name = "page") Long page,
+            @RequestParam(name = "limit") Long limit) {
+
+        List<Post> posts = postService.findByPostTitle(title, page, limit);
+        List<PostResponseDto> responsePost = new ArrayList<>();
+        for (Post post : posts) {
+            responsePost.add(PostResponseDto.of(post));
+        }
+        JsonResponse response = JsonResponse.builder()
+                .code(HttpStatus.OK.value())
+                .httpStatus(HttpStatus.OK)
+                .message("게시글 가져오기 성공")
+                .data(responsePost).build();
         return new ResponseEntity<>(response, response.getHttpStatus());
     }
 
@@ -96,6 +144,16 @@ public class PostController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<JsonResponse> deletePost(@PathVariable("id") Long id) {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        Post post = postService.getPost(id);
+        if (email != post.getMember().getMemberEmail()) {
+            JsonResponse response = JsonResponse.builder()
+                    .code(HttpStatus.FORBIDDEN.value())
+                    .httpStatus(HttpStatus.FORBIDDEN)
+                    .message("삭제 권한이 없습니다.").build();
+            return new ResponseEntity<>(response, response.getHttpStatus());
+
+        }
         postService.deletePostById(id);
         JsonResponse response = JsonResponse.builder()
                 .code(HttpStatus.OK.value())
@@ -122,6 +180,15 @@ public class PostController {
             @RequestParam ItemSellStatus sellStatus
     ) {
         Post post = postService.getPost(id);
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        if (email != post.getMember().getMemberEmail()) {
+            JsonResponse response = JsonResponse.builder()
+                    .code(HttpStatus.FORBIDDEN.value())
+                    .httpStatus(HttpStatus.FORBIDDEN)
+                    .message("수정 권한이 없습니다.").build();
+            return new ResponseEntity<>(response, response.getHttpStatus());
+
+        }
         postService.changeSellStatus(post, sellStatus);
         JsonResponse response = JsonResponse.builder()
                 .code(HttpStatus.OK.value())
@@ -136,6 +203,15 @@ public class PostController {
             @RequestPart PostModifyRequest form,
             @RequestPart List<MultipartFile> image){
         Post post = postService.getPost(id);
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        if (email != post.getMember().getMemberEmail()) {
+            JsonResponse response = JsonResponse.builder()
+                    .code(HttpStatus.FORBIDDEN.value())
+                    .httpStatus(HttpStatus.FORBIDDEN)
+                    .message("수정 권한이 없습니다.").build();
+            return new ResponseEntity<>(response, response.getHttpStatus());
+
+        }
         postService.changePost(post, form, image); //이미지를 제외한 게시글 내용 수정
         JsonResponse response = JsonResponse.builder()
                 .code(HttpStatus.OK.value())
