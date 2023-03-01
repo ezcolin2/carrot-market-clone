@@ -25,7 +25,16 @@ public class InterestController {
 
     @PostMapping("/{postId}")//해당 게시글 번호를 보내면 토큰의 이메일과 게시글 번호를 통해 관심 상품 등록
     public ResponseEntity<JsonResponse> registerInterest(@PathVariable("postId") Long id) {
+        Post post = postService.getPost(id);
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        if (email == post.getMember().getMemberEmail()) {
+            JsonResponse response = JsonResponse.builder()
+                    .code(HttpStatus.FORBIDDEN.value())
+                    .httpStatus(HttpStatus.FORBIDDEN)
+                    .message("내 게시물은 관심 목록으로 등록할 수 없습니다.").build();
+            return new ResponseEntity<>(response, response.getHttpStatus());
+
+        }
 
         Member findMember = memberService.getMemberByUserEmail(email);
         Post findPost = postService.getPost(id);
@@ -39,6 +48,7 @@ public class InterestController {
 
     @DeleteMapping("/{postId}")
     public ResponseEntity<JsonResponse> deleteInterest(@PathVariable("postId") Long id) {
+        Post post = postService.getPost(id);
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
 
         Member findMember = memberService.getMemberByUserEmail(email);
@@ -70,25 +80,4 @@ public class InterestController {
     }
 
 
-//    @PostMapping("/exist")
-//    public ResponseEntity<JsonResponse> getIsInterest(@RequestBody InterestRequest interest) {
-//        Interest findInterest = interestService.getInterest(interest);
-//        JsonResponse response = JsonResponse.builder()
-//                .code(HttpStatus.OK.value())
-//                .httpStatus(HttpStatus.OK)
-//                .message("관심 제품입니다.")
-//                .data(new IsInterestResponse(true)).build();
-//        return new ResponseEntity<>(response, response.getHttpStatus());
-//    }
-//    @PostMapping("/delete")
-//    public ResponseEntity<JsonResponse> deleteInterest(@RequestBody InterestRequest request) {
-//        Interest interest = interestService.getInterest(request);
-//        interestService.deleteInterest(interest.getId());
-//        JsonResponse response = JsonResponse.builder()
-//                .code(HttpStatus.OK.value())
-//                .httpStatus(HttpStatus.OK)
-//                .message("관심 제품을 삭제했습니다.").build();
-//        return new ResponseEntity<>(response, response.getHttpStatus());
-//
-//    }
 }

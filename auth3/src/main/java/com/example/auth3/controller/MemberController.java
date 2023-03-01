@@ -51,39 +51,6 @@ public class MemberController {
 
     }
 
-    @GetMapping("/posts")
-    public ResponseEntity<JsonResponse> getPostsByMemberEmail() {
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        Member user = memberService.getMemberByUserEmail(email);
-        List<PostResponseDto> posts = new ArrayList<>();
-        List<Post> realPosts = user.getPost();
-
-        for (Post post : realPosts) {
-            posts.add(PostResponseDto.of(post));
-        }
-
-        JsonResponse response = JsonResponse.builder()
-                .code(HttpStatus.OK.value())
-                .httpStatus(HttpStatus.OK)
-                .message("나의 게시글 목록을 찾았습니다.")
-                .data(posts).build();
-        return new ResponseEntity<>(response, response.getHttpStatus());
-    }
-    @GetMapping("/interests")
-    public ResponseEntity<JsonResponse> getInterestsByMemberEmail() {
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        Member user = memberService.getMemberByUserEmail(email);
-        List<MyInterestResponse> interests = new ArrayList<>();
-        for (Interest interest : user.getInterests()) {
-            interests.add(MyInterestResponse.of(interest));
-        }
-        JsonResponse response = JsonResponse.builder()
-                .code(HttpStatus.OK.value())
-                .httpStatus(HttpStatus.OK)
-                .message("나의 관심 목록을 찾았습니다.")
-                .data(interests).build();
-        return new ResponseEntity<>(response, response.getHttpStatus());
-    }
     @DeleteMapping//token을 보내면 여기에 담긴 id를 가지고 삭제
     public ResponseEntity<JsonResponse> deleteMember(){
         String email = SecurityContextHolder.getContext().getAuthentication().getName();

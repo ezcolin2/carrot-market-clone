@@ -53,7 +53,7 @@ public class PostController {
         return new ResponseEntity<>(response, response.getHttpStatus());
     }
 
-    @GetMapping("/myself")
+    @GetMapping("/myself")//내 게시물 조회
     public ResponseEntity<JsonResponse> getMyPost(
             @RequestParam(name = "page") Long page,
             @RequestParam(name = "limit") Long limit
@@ -73,7 +73,7 @@ public class PostController {
                 .data(postDtoList).build();
         return new ResponseEntity<>(response, response.getHttpStatus());
     }
-    @GetMapping("/myself/interests")
+    @GetMapping("/myself/interests")//내 관심 목록 조회
     public ResponseEntity<JsonResponse> getMyInterest(
             @RequestParam(name = "page") Long page,
             @RequestParam(name = "limit") Long limit
@@ -94,7 +94,7 @@ public class PostController {
         return new ResponseEntity<>(response, response.getHttpStatus());
     }
 
-        @GetMapping("/search")
+    @GetMapping("/search")
     public ResponseEntity<JsonResponse> searchPostByTitle(
             @RequestParam(name = "title") String title,
             @RequestParam(name = "page") Long page,
@@ -159,6 +159,20 @@ public class PostController {
                 .code(HttpStatus.OK.value())
                 .httpStatus(HttpStatus.OK)
                 .message("게시글 삭제 성공").build();
+        return new ResponseEntity<>(response, response.getHttpStatus());
+    }
+    @GetMapping("/myself/{id}/my-post")//내 게시물인지 확인
+    public ResponseEntity<JsonResponse> isMyPost(@PathVariable("id") Long id) {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        Post post = postService.getPost(id);
+        boolean isMyPost = email==post.getMember().getMemberEmail();
+
+
+        JsonResponse response = JsonResponse.builder()
+                .code(HttpStatus.OK.value())
+                .httpStatus(HttpStatus.OK)
+                .message("내 게시물인지 확인")
+                .data(isMyPost).build();
         return new ResponseEntity<>(response, response.getHttpStatus());
     }
 
