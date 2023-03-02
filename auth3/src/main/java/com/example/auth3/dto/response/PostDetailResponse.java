@@ -25,7 +25,7 @@ public class PostDetailResponse {
     private int chats;
     private int interests;
     private int visits;
-    private ItemSellStatus sellStatus = ItemSellStatus.SELL;
+    private ItemSellStatus sellStatus;
 
     public static PostDetailResponse of(Post post) {
         Member member = post.getMember();

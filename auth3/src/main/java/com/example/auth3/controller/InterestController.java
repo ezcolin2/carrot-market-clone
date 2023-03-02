@@ -27,7 +27,7 @@ public class InterestController {
     public ResponseEntity<JsonResponse> registerInterest(@PathVariable("postId") Long id) {
         Post post = postService.getPost(id);
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        if (email == post.getMember().getMemberEmail()) {
+        if (email.equals(post.getMember().getMemberEmail())) {
             JsonResponse response = JsonResponse.builder()
                     .code(HttpStatus.FORBIDDEN.value())
                     .httpStatus(HttpStatus.FORBIDDEN)

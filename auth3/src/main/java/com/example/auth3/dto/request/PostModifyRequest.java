@@ -1,5 +1,6 @@
 package com.example.auth3.dto.request;
 
+import com.example.auth3.constant.ItemSellStatus;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -16,6 +17,7 @@ public class PostModifyRequest {
     @NotBlank(message = "지역을 입력하세요")
     @NotNull(message = "지역을 입력하세요")
     private String region;
+    private ItemSellStatus itemSellStatus;
     private List<String> imageUrlListForDelete;
 
     private int price;

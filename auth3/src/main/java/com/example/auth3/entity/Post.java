@@ -75,6 +75,7 @@ public class Post extends BaseTime{
         this.postTitle=form.getPostTitle();
         this.content=form.getContent();
         this.price=form.getPrice();
+        this.sellStatus=form.getItemSellStatus();
         List<String> urls = form.getImageUrlListForDelete();
 
         this.images.removeIf( //이미지를 삭제

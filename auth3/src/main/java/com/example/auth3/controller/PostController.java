@@ -146,7 +146,7 @@ public class PostController {
     public ResponseEntity<JsonResponse> deletePost(@PathVariable("id") Long id) {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         Post post = postService.getPost(id);
-        if (email != post.getMember().getMemberEmail()) {
+        if (!email.equals(post.getMember().getMemberEmail())) {
             JsonResponse response = JsonResponse.builder()
                     .code(HttpStatus.FORBIDDEN.value())
                     .httpStatus(HttpStatus.FORBIDDEN)
@@ -188,28 +188,28 @@ public class PostController {
         return new ResponseEntity<>(response, response.getHttpStatus());
     }
 
-    @PutMapping("/{id}/status")
-    public ResponseEntity<JsonResponse> changeItemSellStatus(
-            @PathVariable("id") Long id,
-            @RequestParam ItemSellStatus sellStatus
-    ) {
-        Post post = postService.getPost(id);
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        if (email != post.getMember().getMemberEmail()) {
-            JsonResponse response = JsonResponse.builder()
-                    .code(HttpStatus.FORBIDDEN.value())
-                    .httpStatus(HttpStatus.FORBIDDEN)
-                    .message("수정 권한이 없습니다.").build();
-            return new ResponseEntity<>(response, response.getHttpStatus());
-
-        }
-        postService.changeSellStatus(post, sellStatus);
-        JsonResponse response = JsonResponse.builder()
-                .code(HttpStatus.OK.value())
-                .httpStatus(HttpStatus.OK)
-                .message("판매 상태 갱신 성공").build();
-        return new ResponseEntity<>(response, response.getHttpStatus());
-    }
+//    @PutMapping("/{id}/status")
+//    public ResponseEntity<JsonResponse> changeItemSellStatus(
+//            @PathVariable("id") Long id,
+//            @RequestParam ItemSellStatus sellStatus
+//    ) {
+//        Post post = postService.getPost(id);
+//        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+//        if (!email.equals(post.getMember().getMemberEmail())) {
+//            JsonResponse response = JsonResponse.builder()
+//                    .code(HttpStatus.FORBIDDEN.value())
+//                    .httpStatus(HttpStatus.FORBIDDEN)
+//                    .message("수정 권한이 없습니다.").build();
+//            return new ResponseEntity<>(response, response.getHttpStatus());
+//
+//        }
+//        postService.changeSellStatus(post, sellStatus);
+//        JsonResponse response = JsonResponse.builder()
+//                .code(HttpStatus.OK.value())
+//                .httpStatus(HttpStatus.OK)
+//                .message("판매 상태 갱신 성공").build();
+//        return new ResponseEntity<>(response, response.getHttpStatus());
+//    }
 
     @PutMapping("/{id}") //게시글 수정. 바뀐 이미지만 받는다. 삭제된 이미지의 url을 받아와서 key를 추출해서 s3에 존재하는 이미지를 삭제한다.
     public ResponseEntity<JsonResponse> changePost(
@@ -218,7 +218,7 @@ public class PostController {
             @RequestPart List<MultipartFile> image){
         Post post = postService.getPost(id);
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        if (email != post.getMember().getMemberEmail()) {
+        if (!email.equals(post.getMember().getMemberEmail())) {
             JsonResponse response = JsonResponse.builder()
                     .code(HttpStatus.FORBIDDEN.value())
                     .httpStatus(HttpStatus.FORBIDDEN)
