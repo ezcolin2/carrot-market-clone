@@ -22,7 +22,7 @@ public class PostResponseDto {
     private int chats;
     private int interests;
     private int visits;
-    private ItemSellStatus sellStatus = ItemSellStatus.SELL;
+    private ItemSellStatus sellStatus;
 
     public static PostResponseDto of(Post post) {
         return PostResponseDto.builder()

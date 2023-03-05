@@ -165,7 +165,7 @@ public class PostController {
     public ResponseEntity<JsonResponse> isMyPost(@PathVariable("id") Long id) {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         Post post = postService.getPost(id);
-        boolean isMyPost = email==post.getMember().getMemberEmail();
+        boolean isMyPost = email.equals(post.getMember().getMemberEmail());
 
 
         JsonResponse response = JsonResponse.builder()

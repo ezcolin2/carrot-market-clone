@@ -42,6 +42,12 @@ public class Post extends BaseTime{
             orphanRemoval = true)
     @Builder.Default
     private List<Image> images = new ArrayList<>();
+    @OneToMany(mappedBy = "post",
+            cascade = CascadeType.ALL,
+            fetch=FetchType.LAZY,
+            orphanRemoval = true)
+    @Builder.Default
+    private List<Interest> interest = new ArrayList<>();
     private int chats;
     private int interests;
     private int visits;
