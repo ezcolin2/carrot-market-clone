@@ -1,8 +1,6 @@
 package com.example.auth3.service;
 
-import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.example.auth3.constant.ItemSellStatus;
-import com.example.auth3.dto.request.PostChangeForm;
 import com.example.auth3.dto.request.PostModifyRequest;
 import com.example.auth3.dto.request.PostRequest;
 import com.example.auth3.entity.Image;
@@ -22,7 +20,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.util.List;
 import java.util.Optional;
 
@@ -77,7 +74,7 @@ public class PostService {
     }
     public List<Post> findMyInterest(Long id, Long page, Long limit) {
 
-        return postRepository.findByWriterEmail(id, page, limit);
+        return postRepository.findInterestsByWriterId(id, page, limit);
     }
 
     public List<Post> findByPostTitle(String title,Long page, Long limit) {
