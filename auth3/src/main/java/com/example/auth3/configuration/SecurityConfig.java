@@ -27,7 +27,7 @@ public class SecurityConfig {
                 .csrf().disable()//크로스사이트 기능
                 .cors().and()//크로스사이트 도메인 다를 때 허용
                 .authorizeRequests()
-//                .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
+                .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/posts/**").authenticated()
                 .requestMatchers(HttpMethod.DELETE, "/api/posts/**").authenticated()
                 .requestMatchers(HttpMethod.PUT, "/api/posts/**").authenticated()
