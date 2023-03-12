@@ -8,13 +8,13 @@
         <processorPath useClasspath="false">
           <entry name="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.projectlombok/lombok/1.18.24/13a394eed5c4f9efb2a6d956e2086f1d81e857d9/lombok-1.18.24.jar" />
         </processorPath>
-        <module name="auth3.auth3.main~1" />
+        <module name="auth3.auth3.main" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="auth3.auth3.main" target="17" />
+      <module name="auth3.auth3.main~1" target="17" />
       <module name="auth3.auth3.querydsl~1" target="17" />
-      <module name="auth3.auth3.test" target="17" />
+      <module name="auth3.auth3.test~1" target="17" />
     </bytecodeTargetLevel>
   </component>
 </project>
