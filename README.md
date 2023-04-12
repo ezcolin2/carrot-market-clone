@@ -15,3 +15,7 @@
 4. 오프셋 기반 페이지네이션
 5. 제목 검색 기능
 6. 관심 상품
+
+ERD 설계
+![carrot](https://user-images.githubusercontent.com/105545215/231490073-b484c6b0-45d2-4d91-9bbb-bbb3a0ac2290.png)
+
